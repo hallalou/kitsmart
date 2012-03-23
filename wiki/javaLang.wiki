@@ -1,0 +1,18 @@
+#summary B model of the java.lang package of the Java Card API spec.
+
+
+= Details =
+
+Object.mch
+
+* Throwable.mch      
+  * Exception.mch
+    * RuntimeException.mch
+      * ArithmeticException.mch
+      * ArrayStoreException.mch
+      * ClassCastException.mch
+      * IndexOutOfBoundsException.mch
+        * ArrayIndexOutOfBoundsException.mch
+      * NegativeArraySizeException.mch
+      * NullPointerException.mch
+      * SecurityException.mch
