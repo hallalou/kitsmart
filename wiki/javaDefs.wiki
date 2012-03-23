@@ -1,13 +1,7 @@
 #summary javaDefs contains the B model of java card basic types.
 
-= Introduction =
-
-Add your content here.
-
-
 = Details =
 
-Java Primitive types in B: JBoolean, JByte, JShort, JInt (optional in Java Card)
+Java Card Primitive types in B: JBoolean, JByte, JShort, JInt (optional in Java Card)
 
 Extra specification: Int32 (probably will be removed)
-
