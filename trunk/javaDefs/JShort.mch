@@ -95,7 +95,7 @@ PROPERTIES
 		! ( s1 ) . ( s1 : INTEGER  => 
 			(s1 = 0  => cast_short(s1) = 0) & 
 			(s1 > 0  => cast_short(s1) = s1 mod 32767) & 
-			(s1 < 0  => cast_short(s1) = -(-s1 mod 32767))
+			(s1 < 0  => cast_short(s1) = -((-s1) mod 32767))
 		) &
 
 		/* Checks whether 2 shorts are equal to each other (==) 
