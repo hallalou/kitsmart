@@ -8,7 +8,7 @@
 MACHINE
     Apdu
     
-/*ATENTION This class extends Object (java.lang.Object)*/
+/* This class extends Object (java.lang.Object)*/
 EXTENDS
 	Object
 
@@ -22,18 +22,18 @@ CONCRETE_VARIABLES
     /*this,*/
  	/* The current state of data processing */
 	state,
-	 /* The APDU buffer array */
-    buffer,
+	/* The APDU buffer */
+    	buffer,
  	/* The length of the incoming data field of the command */
 	lc,
-	 /*The expected length of the response (if any) */
+	/* The expected length of the response (if any) */
 	le,
-	 /* The real effective length of the response (if any) */
+	/* The real effective length of the response (if any) */
  	lr
     
 
 INVARIANT
-    state : APDU_STATE & 
+    	state : APDU_STATE & 
    	buffer : seq(JBYTE)  &
    	size(buffer) >= 0 & 
    	size(buffer) <= BUFFER_LENGTH &

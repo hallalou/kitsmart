@@ -11,6 +11,10 @@ SEES
     
 SETS
     APDU;
+    /* STATE_.. constants which represent the various processing states of 
+    the APDU. Low level requirements such as error state constants being
+    negative are not modeled here. 
+	*/
     APDU_STATE = {
         STATE_INITIAL,
  		STATE_PARTIAL_INCOMING,
@@ -44,18 +48,25 @@ PROPERTIES
 
  PROTOCOL_MEDIA_MASK : JBYTE &
  PROTOCOL_MEDIA_MASK = -16 &
+ 
  PROTOCOL_TYPE_MASK : JBYTE &
  PROTOCOL_TYPE_MASK = 15 &
+ 
  PROTOCOL_TO : JBYTE &
  PROTOCOL_TO = 0 &
+ 
  PROTOCOL_T1 : JBYTE &
  PROTOCOL_T1 = 1 &
+ 
  PROTOCOL_MEDIA_DEFAULT : JBYTE &
  PROTOCOL_MEDIA_DEFAULT = 0 &
+ 
  PROTOCOL_MEDIA_CONTACTLESS_TYPE_A : JBYTE &
  PROTOCOL_MEDIA_CONTACTLESS_TYPE_A = -128 &
+ 
  PROTOCOL_MEDIA_CONTACTLESS_TYPE_B : JBYTE &
  PROTOCOL_MEDIA_CONTACTLESS_TYPE_B = -112 &
+ 
  PROTOCOL_MEDIA_USB : JBYTE &
  PROTOCOL_MEDIA_USB = -96 & 
   
