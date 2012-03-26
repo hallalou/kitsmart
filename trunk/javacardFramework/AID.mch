@@ -35,8 +35,8 @@ OPERATIONS
 		
 		/* length - the length of the AID bytes in bArray */
 		/* ArrayIndexOutOfBoundsException if 'length' is negative */
-		/* SystemException if 'length' < 5 or 'length' > 16*/
-		/* reason code: SystemException.ILLEGAL_VALUE */
+		/* SystemException if 'length' < 5 or 'length' > 16
+		   with reason code: SystemException.ILLEGAL_VALUE */
            	length : JBYTE &
 		length >= 5 & 
 		length <= 16 & 
