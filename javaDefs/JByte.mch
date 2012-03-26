@@ -106,7 +106,7 @@ PROPERTIES
 		! (s1) . ( s1 : INTEGER => 
 			       		(s1 = 0 => cast_byte (s1) = 0) & 
 				   		(s1 > 0 => cast_byte (s1) = s1 mod MAXBYTE) &
-				   		(s1 < 0 => cast_byte (s1) = -(-s1 mod -MINBYTE)) 
+				   		(s1 < 0 => cast_byte (s1) = -((-s1) mod (-MINBYTE))) 
                   )
 	&
 	
