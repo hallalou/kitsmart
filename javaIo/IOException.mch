@@ -7,6 +7,12 @@ MACHINE
 
 /*This class extends java.lang.Exception*/
 EXTENDS
-	Exception
-
+    Exception
+       
+CONSTANTS
+    IO_EXCEPTION
+    
+PROPERTIES
+    IO_EXCEPTION <: EXCEPTION
+    
 END
