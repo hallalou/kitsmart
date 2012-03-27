@@ -125,18 +125,29 @@ OPERATIONS
 	END;
 
 /*-------------------------------------------------------------------------*/
-	result <-- RIDEquals(otherAID) = /*SecurityException*/
-	PRE
-		/*otherAID's type is AID*/
-		otherAID : seq(JBYTE) &
-		size(otherAID) >= 5 &
-		size(otherAID) <= 16
+
+	/* RIDEquals checks if the RID (National Registered Application provider 	identi?er) portion of the encapsulated AID bytes within the otherAID 
+	object matches that of thisAID object. The ?rst 5 bytes of an AID byte
+	sequence is the RID. The result is true if and only if the argument is
+	not null and is anAID object that encapsulates the same RID bytes as
+	this object. This method does not throw NullPointerException. With the    
+      current modeling we don't have this information. Here, we only model the
+      two possible return values.
+	*/
+
+result <-- RIDEquals(otherAID) = 
+	/*throws: SecurityException*/
+	PRE  
+		/* otherAID's must be an AID Object (not modeled) */
+		otherAID : OBJECT 
 	THEN
 		CHOICE
 			result := TRUE
 		OR
 			result := FALSE
 		END
+		/* SecurityException if the otherAID object is not accessible in
+		the caller?s context*/
 	END;
 
 /*-------------------------------------------------------------------------*/
