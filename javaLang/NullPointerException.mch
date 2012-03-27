@@ -8,5 +8,13 @@ MACHINE
 /*This class extends java.lang.RuntimeException */
 EXTENDS
 	RuntimeException
+	
+CONSTANTS
+    NULL_POINTER_EXCEPTION
+    
+PROPERTIES
+    NULL_POINTER_EXCEPTION <: RUNTIME_EXCEPTION
+
+
 
 END

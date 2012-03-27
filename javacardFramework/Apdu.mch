@@ -17,9 +17,31 @@ SEES
  JByte,
  ApduSetsAndConstants,
  ISO7816
+ 
+DEFINITIONS
+    /* Some auxiliary names (not part of the API specification) */
+    
+    /* set of available APDU states */
+     APDU_STATE == { 
+     	STATE_INITIAL,
+ 	STATE_PARTIAL_INCOMING,
+ 	STATE_FULL_INCOMING,
+ 	STATE_OUTGOING,
+ 	STATE_OUTGOING_LENGTH_KNOWN,	
+ 	STATE_PARTIAL_OUTGOING,
+ 	STATE_FULL_OUTGOING,
+ 	STATE_ERROR_NO_T0_GETRESPONSE,
+ 	STATE_ERROR_T1_IFD_ABORT,
+ 	STATE_ERROR_IO,
+ 	STATE_ERROR_NO_T0_REISSUE };
+
+	/* APDU buffers */
+	BUFFER == {s | s : seq(JBYTE) & size(s) >= 5 & size(s) <133 };
+	
+	BUFFER_LENGTH == 133   
+ 
 
 CONCRETE_VARIABLES
-    /*this,*/
  	/* The current state of data processing */
 	state,
 	/* The APDU buffer */

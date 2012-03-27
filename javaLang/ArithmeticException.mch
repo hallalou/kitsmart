@@ -8,5 +8,11 @@ MACHINE
 /*This class extends java.lang.RuntimeException */
 EXTENDS
 	RuntimeException
+	
+CONSTANTS
+    ARITHMETIC_EXCEPTION
+    
+PROPERTIES
+    ARITHMETIC_EXCEPTION <: RUNTIME_EXCEPTION
 
 END
