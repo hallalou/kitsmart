@@ -68,15 +68,26 @@ INVARIANT
 INITIALISATION
 	buffer := [0, 0, 0, 0, 0, 0, 0, 0] ||
     state := STATE_INITIAL ||
-    lc, le, lr := 0, 0, 0 /*||
-    this := rec (buffer : buffer, state : state, lc : lc, le : le, lr : lr, null : FALSE)*/
+    lc, le, lr := 0, 0, 0 
     
 OPERATIONS
+    
+    /* Returns the APDU buffer byte array */
 	result <-- getBuffer =
 		BEGIN
 	    	result := buffer
 	 	END;
+	 	
+	/* Returns the logical channel number associated with the current 			APDU command based on the CLA byte.  With the    
+      current modeling we don't have this information. Here, we only model the
+      20 possible return values.*/ 	
+	CLA <-- getCLAChannel = 
+	/* throws: SecurityException*/
+		BEGIN
+		CLA :: cast_byte(0) .. cast_byte(19)
+		END;
 
+	 	
 	blocksize <-- getInBlockSize = 
 		ANY apdu_anyBlocksize
 		WHERE (apdu_anyBlocksize : JSHORT) &
@@ -331,10 +342,6 @@ OPERATIONS
 		apdu := buffer
 	END;
 
-	CLA <-- getCLAChannel = /*SecurityException*/
-	BEGIN
-		CLA :: cast_byte(0) .. cast_byte(19)
-	END;
 
 	waitExtension = /*APDUException*/
 	/*APDUException.ILLEGAL_USE if setOutgoingNoChaining() 
