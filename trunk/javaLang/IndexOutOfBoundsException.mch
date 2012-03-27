@@ -7,6 +7,13 @@ MACHINE
 
 /*This class extends java.lang.RuntimeException */
 EXTENDS
-	RuntimeException
+    RuntimeException
+    
+CONSTANTS
+    INDEX_OUT_OF_BOUNDS_EXCEPTION
+    
+PROPERTIES
+    INDEX_OUT_OF_BOUNDS_EXCEPTION <: RUNTIME_EXCEPTION
+
 
 END

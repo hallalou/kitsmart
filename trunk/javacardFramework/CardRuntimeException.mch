@@ -5,13 +5,12 @@
 MACHINE
     CardRuntimeException
     
-/*This class extends RuntimeException (java.lang.RuntimeException) */
+/*This class extends java.lang.RuntimeException */
 EXTENDS
     RuntimeException
  
 SEES
- JShort,
- JByte
+ JShort
 
 OPERATIONS
 	reason <-- getReason = 

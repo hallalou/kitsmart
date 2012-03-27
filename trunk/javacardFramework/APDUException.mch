@@ -5,14 +5,12 @@
 MACHINE
     APDUException
     
-/*ATENTION This class extends CardRuntimeException (javacard.framework.CardRuntimeException)*/
+/* This class extends javacard.framework.CardRuntimeException */
 EXTENDS
 	CardRuntimeException
    
 SEES
- JShort,
- JByte
-
+ JShort
 
 CONSTANTS
  ILLEGAL_USE,

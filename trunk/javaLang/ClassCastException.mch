@@ -7,6 +7,14 @@ MACHINE
 
 /*This class extends java.lang.RuntimeException */
 EXTENDS
-	RuntimeException
+    RuntimeException
+    
+CONSTANTS
+    CLASS_CAST_EXCEPTION
+    
+PROPERTIES
+    CLASS_CAST_EXCEPTION <: RUNTIME_EXCEPTION
+
+
 
 END

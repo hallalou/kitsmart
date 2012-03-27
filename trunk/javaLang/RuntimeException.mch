@@ -5,11 +5,14 @@
 MACHINE
     RuntimeException
 
-SEES
-	JShort
-
 /*This class extends java.lang.Exception */
 EXTENDS
-	Exception
+    Exception
+    
+CONSTANTS
+    RUNTIME_EXCEPTION
+    
+PROPERTIES
+    RUNTIME_EXCEPTION <: EXCEPTION
 
 END

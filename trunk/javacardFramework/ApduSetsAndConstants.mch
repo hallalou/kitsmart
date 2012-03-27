@@ -1,4 +1,4 @@
-/* ApduSetsAndConstants
+/* ApduSetsAndConstants - constants of the javacard.framework.APDU class 
  * Author: simone
  * Creation date: 07/06/11
  */
@@ -7,44 +7,82 @@ MACHINE
 
 SEES
     JByte,
-    JShort
+    ObjectSet    
+
+CONCRETE_CONSTANTS
     
-SETS
-    APDU;
-    /* STATE_.. constants which represent the various processing states of 
+    /* The universe of APDU objects, representing the APDU type in javacard */
+    	APDU,
+    
+     /* STATE_.. constants which represent the various processing states of 
     the APDU. Low level requirements such as error state constants being
     negative are not modeled here. 
 	*/
-    APDU_STATE = {
-        STATE_INITIAL,
- 		STATE_PARTIAL_INCOMING,
- 		STATE_FULL_INCOMING,
- 		STATE_OUTGOING,
- 		STATE_OUTGOING_LENGTH_KNOWN,
- 		STATE_PARTIAL_OUTGOING,
- 		STATE_FULL_OUTGOING,
- 		STATE_ERROR_NO_T0_GETRESPONSE,
- 		STATE_ERROR_T1_IFD_ABORT,
- 		STATE_ERROR_IO,
- 		STATE_ERROR_NO_T0_REISSUE
-    }
-
-CONCRETE_CONSTANTS
-
- PROTOCOL_MEDIA_MASK,
- PROTOCOL_TYPE_MASK,
- PROTOCOL_TO, 
- PROTOCOL_T1, 
- PROTOCOL_MEDIA_DEFAULT,
- PROTOCOL_MEDIA_CONTACTLESS_TYPE_A,
- PROTOCOL_MEDIA_CONTACTLESS_TYPE_B,
- PROTOCOL_MEDIA_USB,
- BUFFER_INDEX,
- BUFFER_HEADER_LENGTH,
- BUFFER_LENGTH,
- BUFFER
-	
+ 	STATE_INITIAL,
+ 	STATE_PARTIAL_INCOMING,
+ 	STATE_FULL_INCOMING,
+ 	STATE_OUTGOING,	
+ 	STATE_OUTGOING_LENGTH_KNOWN,
+ 	STATE_PARTIAL_OUTGOING,
+ 	STATE_FULL_OUTGOING,
+ 	STATE_ERROR_NO_T0_GETRESPONSE,
+ 	STATE_ERROR_T1_IFD_ABORT,
+ 	STATE_ERROR_IO,
+ 	STATE_ERROR_NO_T0_REISSUE,
+ 	
+ 	/* protocol related constants */
+ 	PROTOCOL_MEDIA_MASK,
+ 	PROTOCOL_TYPE_MASK,
+ 	PROTOCOL_TO, 
+ 	PROTOCOL_T1, 
+ 	PROTOCOL_MEDIA_DEFAULT,
+ 	PROTOCOL_MEDIA_CONTACTLESS_TYPE_A,
+ 	PROTOCOL_MEDIA_CONTACTLESS_TYPE_B,
+ 	PROTOCOL_MEDIA_USB
+ 	
 PROPERTIES
+    
+ /* APDUs are objects */
+ APDU <: OBJECT &
+ 
+ /* APDU state constants - values defined in 	
+ http://www.win.tue.nl/pinpasjc/docs/apis/jc222/index.html */
+ 
+ STATE_INITIAL : JBYTE &
+ STATE_INITIAL = 0 &
+ 
+ STATE_PARTIAL_INCOMING : JBYTE &
+ STATE_PARTIAL_INCOMING = 1 & 
+ 
+ STATE_FULL_INCOMING : JBYTE & 
+ STATE_FULL_INCOMING = 2 &
+ 
+ STATE_OUTGOING : JBYTE &
+ STATE_OUTGOING = 3 &
+ 
+ STATE_OUTGOING_LENGTH_KNOWN : JBYTE & 
+ STATE_OUTGOING_LENGTH_KNOWN = 4 &
+ 
+ STATE_PARTIAL_OUTGOING : JBYTE &
+ STATE_PARTIAL_OUTGOING = 5 &
+ 
+ STATE_FULL_OUTGOING : JBYTE &
+ STATE_FULL_OUTGOING = 6 & 
+ 
+ STATE_ERROR_NO_T0_GETRESPONSE : JBYTE &
+ STATE_ERROR_NO_T0_GETRESPONSE = -1 &
+ 
+ STATE_ERROR_T1_IFD_ABORT : JBYTE &
+ STATE_ERROR_T1_IFD_ABORT = -2 &
+ 
+ STATE_ERROR_IO : JBYTE &
+ STATE_ERROR_IO = -3 &
+ 
+ STATE_ERROR_NO_T0_REISSUE : JBYTE &
+ STATE_ERROR_NO_T0_REISSUE = -4 &
+ 
+  /* protocol related constants - values defined in 	
+ http://www.win.tue.nl/pinpasjc/docs/apis/jc222/index.html */ 
 
  PROTOCOL_MEDIA_MASK : JBYTE &
  PROTOCOL_MEDIA_MASK = -16 &
@@ -68,17 +106,8 @@ PROPERTIES
  PROTOCOL_MEDIA_CONTACTLESS_TYPE_B = -112 &
  
  PROTOCOL_MEDIA_USB : JBYTE &
- PROTOCOL_MEDIA_USB = -96 & 
-  
- /*BUFFER_INDEX : JSHORT &*/
- BUFFER_INDEX = cast_short(0) .. cast_short(132) &
- BUFFER = seq(JBYTE) & /* BUFFER_INDEX --> JBYTE*/
- BUFFER_HEADER_LENGTH = cast_byte(5) &
- BUFFER_LENGTH : JSHORT &
- /*BUFFER_LENGTH >= 0 &*/ 	/*empty buffer*/
- BUFFER_LENGTH = 133   /*full buffer*/
- /*APDU = struct(buffer : BUFFER, state : JBYTE, 
-     		   lc : JSHORT, le : JSHORT, lr : JSHORT,  null : BOOL)
- */
+ PROTOCOL_MEDIA_USB = -96 
  
+ 
+	
 END

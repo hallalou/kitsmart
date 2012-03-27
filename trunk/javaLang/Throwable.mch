@@ -7,6 +7,15 @@ MACHINE
 
 /*This class extends java.lang.Object*/
 EXTENDS
-	Object
+    Object
     
+SEES 
+    ObjectSet
+    
+CONSTANTS
+    THROWABLE
+    
+PROPERTIES
+    THROWABLE <: OBJECT
+      
 END

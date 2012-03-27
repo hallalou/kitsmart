@@ -7,6 +7,13 @@ MACHINE
 
 /*This class extends java.lang.Throwable*/
 EXTENDS
-	Throwable
+    Throwable
+        
+CONSTANTS
+    EXCEPTION
+    
+PROPERTIES
+    EXCEPTION <: THROWABLE
+
 
 END
