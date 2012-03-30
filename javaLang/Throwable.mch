@@ -6,10 +6,8 @@ MACHINE
     Throwable
     
 /*This class extends java.lang.Object*/
-EXTENDS
-    Object
-    
-SEES 
+SEES
+    Object,
     ThrowableSet
     
 END
