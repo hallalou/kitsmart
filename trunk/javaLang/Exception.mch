@@ -8,12 +8,9 @@ MACHINE
 /*This class extends java.lang.Throwable*/
 EXTENDS
     Throwable
-        
-CONSTANTS
-    EXCEPTION
     
-PROPERTIES
-    EXCEPTION <: THROWABLE
+SEES 
+    ExceptionSet
 
 
 END

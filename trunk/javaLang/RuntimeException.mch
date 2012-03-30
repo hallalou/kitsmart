@@ -9,10 +9,7 @@ MACHINE
 EXTENDS
     Exception
     
-CONSTANTS
-    RUNTIME_EXCEPTION
-    
-PROPERTIES
-    RUNTIME_EXCEPTION <: EXCEPTION
+SEES
+    RuntimeExceptionSet
 
 END

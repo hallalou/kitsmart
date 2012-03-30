@@ -4,18 +4,12 @@
  */
 MACHINE
     Throwable
-
+    
 /*This class extends java.lang.Object*/
 EXTENDS
     Object
     
 SEES 
-    ObjectSet
+    ThrowableSet
     
-CONSTANTS
-    THROWABLE
-    
-PROPERTIES
-    THROWABLE <: OBJECT
-      
 END
