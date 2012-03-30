@@ -7,12 +7,9 @@ MACHINE
 
 /*This class extends java.lang.RuntimeException */
 EXTENDS
-	RuntimeException
-	
-CONSTANTS
-    ARITHMETIC_EXCEPTION
+    RuntimeException
     
-PROPERTIES
-    ARITHMETIC_EXCEPTION <: RUNTIME_EXCEPTION
+SEES
+    ArithmeticExceptionSet
 
 END
