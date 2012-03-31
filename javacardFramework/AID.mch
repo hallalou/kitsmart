@@ -8,17 +8,18 @@
  *
  */
 MACHINE
-    AID
+    Aid
     
 /*This class extends Object (java.lang.Object)*/
-EXTENDS
+SEES
     Object  
 
 SEES
     JBoolean,
     JByte,
     JShort,
-    ObjectSet
+    ObjectSet,
+    AidSet
 
 OPERATIONS
     
@@ -47,6 +48,8 @@ OPERATIONS
 			length <= 16 & 
 		
 		/*ATENTION different types of variables, offset and length*/
+		/* we can use + because JBYTE and JSHORT are of B INTEGER type 
+		   and code is not to be generated from this */
 		/* ArrayIndexOutOfBoundsException if 
 		   'offset+length' is greater than the length of 'bArray' */
 			(offset + length) <= size(bArray) 
@@ -187,8 +190,8 @@ OPERATIONS
 	/* throws: SecurityException*/
 	PRE 
 		/* otherAID: the AID to compare against */
-		/* otherAID's must be an AID Object (not modeled) */
-		otherAID : OBJECT 
+		/* otherAID's must be an AID Object  */
+		otherAID : AID
 	THEN
 		CHOICE
 			result := TRUE

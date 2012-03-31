@@ -2,16 +2,14 @@
  *
  * Authors: Katia Moraes, Bruno Gomes, Simone Oliveira, Anamaria
  *
- * NOTE: In the current model, usually only the interface of the operation is 	 * modeled.
+ * NOTE: In the current model, only the interface of the operation is 	 * modeled.
  */
 MACHINE
     Apdu
     
 /* This class extends Object (java.lang.Object)*/
-EXTENDS
-	Object
-
 SEES
+ Object,
  JShort,
  JByte,
  ApduSetsAndConstants,
@@ -35,46 +33,16 @@ DEFINITIONS
  	STATE_ERROR_NO_T0_REISSUE };
 
 	/* APDU buffers */
-	BUFFER == {s | s : seq(JBYTE) & size(s) >= 5 & size(s) <133 };
+	BUFFER == {ss | ss : seq(JBYTE) & size(ss) >= 5 & size(ss) <133 };
 	
 	BUFFER_LENGTH == 133   
- 
-
-CONCRETE_VARIABLES
- 	/* The current state of data processing */
-	state,
-	/* The APDU buffer */
-    	buffer,
- 	/* The length of the incoming data field of the command */
-	lc,
-	/* The expected length of the response (if any) */
-	le,
-	/* The real effective length of the response (if any) */
- 	lr
-    
-
-INVARIANT
-    	state : APDU_STATE & 
-   	buffer : seq(JBYTE)  &
-   	size(buffer) >= 0 & 
-   	size(buffer) <= BUFFER_LENGTH &
-   	lc : JSHORT &
-   	lr : JSHORT &
-   	le : JSHORT & 
-   	le >= 0 &
-   	le <= 256
-
-INITIALISATION
-	buffer := [0, 0, 0, 0, 0, 0, 0, 0] ||
-    state := STATE_INITIAL ||
-    lc, le, lr := 0, 0, 0 
-    
+     
 OPERATIONS
     
-    /* Returns the APDU buffer byte array */
+      /* Returns the APDU buffer byte array */
 	result <-- getBuffer =
 		BEGIN
-	    	result := buffer
+	    	result :: BUFFER
 	 	END;
 	 	
 	/* Returns the logical channel number associated with the current 			APDU command based on the CLA byte. */ 	
@@ -101,7 +69,7 @@ OPERATIONS
 	apdu <-- getCurrentAPDUBuffer = 
 	/* throws: SecurityException*/
 	BEGIN
-		apdu := buffer
+		apdu :: BUFFER
 	/* SecurityException if the current context is not the context 
 	of the currently selected applet instance or this method was not 
 	called, directly or indirectly, from the applet's process 
@@ -113,23 +81,22 @@ OPERATIONS
 	/* Returns the current processing state of the APDU */
    	result <-- getCurrentState = 
 	BEGIN
-	    result := state
+	    result :: APDU_STATE
 	END;
 	
-	/* Returns the con?gured incoming block size. */
+	/* Returns the configured incoming block size. */
 	blocksize <-- getInBlockSize = 
-		ANY apdu_anyBlocksize
-		WHERE (apdu_anyBlocksize : JSHORT) &
-	     	  (apdu_anyBlocksize >= 0)
-		THEN blocksize := apdu_anyBlocksize
-		END;
+	BEGIN
+	    blocksize : (blocksize : JSHORT & blocksize >=0 )  
+	END;
+	
 		
 	/* Returns the incoming data length(Lc).*/		
 	length <-- getIncomingLength = 
 	/* throws: APDUException */
 	BEGIN
 		CHOICE
-			length := lc
+			length : (length : JSHORT & length >= 1)
 		OR
 			length := 0 /* if no incoming data */ 
 		END
@@ -158,11 +125,9 @@ OPERATIONS
 		
 	/* Returns the con?gured outgoing block size. */
 	blocksize <-- getOutBlockSize = 
-		ANY apdu_anyBlocksize
-		WHERE (apdu_anyBlocksize : JSHORT) &
-		(apdu_anyBlocksize >= 0)
-		THEN blocksize := apdu_anyBlocksize
-		END;
+	BEGIN
+	    blocksize : (blocksize : JSHORT & blocksize >=0 )  
+	END;
 		
 	/*Returns the ISO 7816 transport protocol type, T=1 or T=0 in the low
 		nibble and the transport media in the upper nibble in use. */
@@ -210,117 +175,51 @@ OPERATIONS
 	    	(modeled for size 0, only) */	    
       	bOff : JSHORT &
       	bOff >= 0 & 
-      	bOff < BUFFER_LENGTH & 
+      	bOff < BUFFER_LENGTH 
       	
       	/*APDUException if setIncomingAndReceive() not called or 
-       	if setOutgoing() or setOutgoingNoChaining() previously invoked*/      		state = STATE_PARTIAL_INCOMING
- 
+      	if setOutgoing() or setOutgoingNoChaining() previously invoked*/      
+      	
 		/*APDUException if not enough buffer space for incoming block size*/
 		/*APDUException on I/O error.*/
 		/*APDUException if T=1 protocol is in use and the CAD sends 
 		in an ABORT S-Block command to abort the data transfer*/
     	THEN
-        	CHOICE 
-       			state := STATE_PARTIAL_INCOMING 
-        	OR
-       			state := STATE_FULL_INCOMING
-        	END
-        	||
+    	    /* update APDU state to STATE_PARTIAL_INCOMING or 
+    	    STATE_FULL_INCOMING and 
+    	    returns the number of bytes read */
+        
 		result : (result : JSHORT & 
             	  result >=0 &
-            	  result <= (buffer)(OFFSET_LC)  &
-           		  sum_short(result,bOff) <= BUFFER_LENGTH)        	
-   	END;
+            	  result <=BUFFER_LENGTH)        	
+   	END; 
 		
-		
-
-	result <-- setOutgoing = /*APDUException*/
-   	PRE
-		(state = STATE_INITIAL or 
-		 state = STATE_PARTIAL_INCOMING or
-		 state = STATE_FULL_INCOMING)
-		/*APDUException if this method, or setOutgoingNoChaining() method already invoked*/
-		/*APDUException I/O error*/
-	THEN 
-  		state := STATE_OUTGOING  ||
-		result := le
-   	END;
-	
-	result <-- setOutgoingNoChaining = /*APDUException*/
-    	PRE
-    		(state = STATE_INITIAL or 
-       		 state = STATE_PARTIAL_INCOMING or
-       		 state = STATE_FULL_INCOMING)
-
-		/*APDUException if this method, or setOutgoing() method already invoked*/
-    	/*APDUException I/O error*/
-	THEN
-   		state := STATE_OUTGOING ||
-		result := le
-   	END;
-
-	setOutgoingLength(len) = /*APDUException*/
-    	PRE
-    	    len : JSHORT &
-    	    /*APDUException if 'len' is negative*/
-    	    len >= 0 & 
-    	    /*APDUException if 'len' is greater than 256 
-    	    and the currently selected applet does not implement 
-    	    the javacardx.apdu.ExtendedLength interface*/
-			len <= 256 & 
-       		state = STATE_OUTGOING
-       		/*APDUException if setOutgoing() or setOutgoingNoChaining() 
-       		not called or if setOutgoingAndSend() already invoked, 
-       		or this method already invoked*/
-			/*APDUException I/O error*/
-    THEN
-    	state := STATE_OUTGOING_LENGTH_KNOWN ||
-   	    lr := len
-   	END;
-
-
-    	result <-- setIncomingAndReceive = /*APDUException*/
-			/*APDUException if setIncomingAndReceive() already invoked 
-			  or if setOutgoing() or setOutgoingNoChaining() previously invoked*/
-    		/*APDUException on I/O error*/
-    		/*APDUException if T=1 protocol is in use and the CAD 
-    		sends in an ABORT S-Block command to abort the data transfer*/
-    	SELECT
-        	state = STATE_INITIAL
-    	THEN
-        	CHOICE
-        		state := STATE_PARTIAL_INCOMING
-        	OR
-            	state := STATE_FULL_INCOMING 
-        	END
-			||
-		
-			result :(result : JSHORT &
-				     result >= 0 &
-				     result <= buffer(OFFSET_LC)
-					)
-		    /*END*/
-		END;
-    
-	sendBytes(bOff, len) = /*APDUException*/
-   	PRE
+	sendBytes(bOff, len) = 
+	/* throws: APDUException */
+	PRE
+	    		/* the offset into APDU buffer */
        		bOff : JSHORT &
-			bOff >= 0 & /*APDUException  if 'bOff' is negative*/
+       		bOff >= 0 & /*APDUException  if 'bOff' is negative*/
+       		
+       		/*  the length of the data in bytes to send */
        		len : JSHORT &
        		len >= 0 & /*APDUException  if 'len' is negative */
+       		
        		/*APDUException or 'bOff+len' exceeds the buffer size*/
-			sum_short(bOff,len) <= BUFFER_LENGTH & 
-       		len <= lr &
-   	   		state = STATE_OUTGOING_LENGTH_KNOWN
+       		sum_short(bOff,len) <= BUFFER_LENGTH 
+       		
+       		/* len <= lr */
+   	   		/* state = STATE_OUTGOING_LENGTH_KNOWN */
 
-		/*APDUException if setOutgoingLength() not called or 
+		/* APDUException if setOutgoingLength() not called or 
 		setOutgoingAndSend() previously invoked or response byte count 
 		exceeded or if APDUException.NO_T0_GETRESPONSE or 
 		APDUException.NO_T0_REISSUE or APDUException.T1_IFD_ABORT 
 		previously thrown*/
-		/*APDUException on I/O error*/
-		/*APDUException.NO_T0_GETRESPONSE if T=0 protocol is in 
-		use and the CAD does not respond to (ISO7816.SW_BYTES_REMAINING_00+count) 
+		/* APDUException on I/O error*/
+		/* APDUException.NO_T0_GETRESPONSE if T=0 protocol is in 
+		use and the CAD does not respond to 	
+		(ISO7816.SW_BYTES_REMAINING_00+count) 
 		response status with GET RESPONSE command on the same origin logical 
 		channel number as that of the current APDU command*/
 		/*APDUException.NO_T0_REISSUE if T=0 protocol is in use and the 
@@ -330,25 +229,30 @@ OPERATIONS
 		with the corrected length*/
 		/*APDUException.T1_IFD_ABORT if T=1 protocol is in use and the 
 		CAD sends in an ABORT S-Block command to abort the data transfer*/
-   	THEN
-   	    CHOICE 
-			state := STATE_PARTIAL_OUTGOING
-   		OR  
-			state := STATE_FULL_OUTGOING
-	    END
-		||
-		lr := subt_short(lr, len)
+	THEN
+    	/* update APDU state to STATE_PARTIAL_OUTGOING or 
+    	    STATE_FULL_OUTGOING and 
+    	    updates the number of bytes to be sent */
+    	    skip
    	END;
     
-	sendBytesLong(outData ,bOff ,len) = /*APDUException, SecurityException*/
-   	PRE
+    sendBytesLong(outData ,bOff ,len) = 
+    /* throws: APDUException, SecurityException */
+    PRE
+        	/* the source data byte array */
    		outData : seq(JBYTE) & 
-   	   	bOff : JSHORT & 
-		bOff >= 0 &
-   	    len : JSHORT &
-		len >= 0 & 
-		len <= lr &
-		state = STATE_OUTGOING_LENGTH_KNOWN 
+   		
+   		/* the offset into outData array */
+   		bOff : JSHORT & 
+   		bOff >= 0 &
+   		
+   		/* the byte length of the data to send */
+   	      len : JSHORT &
+   	      len >= 0 
+   	      
+		/* len <= lr */
+		 
+		/* state = STATE_OUTGOING_LENGTH_KNOWN */
 
 		/*SecurityException if the 'outData' array is not 
 		  accessible in the caller's context*/
@@ -357,57 +261,131 @@ OPERATIONS
 		byte count exceeded or if APDUException.NO_T0_GETRESPONSE or 
 		APDUException.NO_T0_REISSUE or APDUException.NO_T0_REISSUE 
 		previously thrown*/
-        /*APDUException.IO_ERROR on I/O error*/
-        /*APDUException.NO_T0_GETRESPONSE if T=0 protocol 
+        /* APDUException.IO_ERROR on I/O error*/
+        /* APDUException.NO_T0_GETRESPONSE if T=0 protocol 
         is in use and CAD does not respond to 
         (ISO7816.SW_BYTES_REMAINING_00+count)
         response status with GET RESPONSE command on the 
         same origin logical channel number as that of the 
-        current APDU command*/
-        /*APDUException.T1_IFD_ABORT if T=1 protocol is in use and 
+        current APDU command */
+        /* APDUException.T1_IFD_ABORT if T=1 protocol is in use and 
         the CAD sends in an ABORT S-Block command to 
-        abort the data transfer*/
+        abort the data transfer */
 	THEN
-   	    CHOICE 
-   	   		state := STATE_PARTIAL_OUTGOING
-   		OR  
-			state := STATE_FULL_OUTGOING
-	    END
-			||
+    	/* update APDU state to STATE_PARTIAL_OUTGOING or 
+    	    STATE_FULL_OUTGOING and 
+    	    updates the number of bytes to be sent */
+    	    skip
+    	END;
+    		
+    		
+      result <-- setIncomingAndReceive = 
+    	/* throws: APDUException */
+    	
+		/*APDUException if setIncomingAndReceive() already invoked 
+		or if setOutgoing() or setOutgoingNoChaining() previously invoked*/
+    		/* APDUException on I/O error*/
+    		/* APDUException if T=1 protocol is in use and the CAD 
+    		sends in an ABORT S-Block command to abort the data transfer*/
+	BEGIN
+  	
+  	/* updates the APDU state to STATE_PARTIAL_INCOMING or 	
+  	STATE_FULL_INCOMING  and returns  the number of bytes read */
 			
-			lr := subt_short(lr, len)
-    END;
-    
-	setOutgoingAndSend(bOff ,len) =  /*APDUException*/
+		result :(result : JSHORT & result >= 0 &
+				     				result <= BUFFER_LENGTH )		    
+	END;
+	
+	
+	
+	result <-- setOutgoing = 
+	/* throws: APDUException */
+
+		/* The APDU state must be one of STATE_INITIAL or 
+		  STATE_PARTIAL_INCOMING or STATE_FULL_INCOMING */
+		  /* APDUException if this method, or setOutgoingNoChaining() 
+		  method already invoked */
+		  /* APDUException I/O error */
+	BEGIN
+	    /* updates the APDU state to STATE_OUTGOING and 
+	    	returns Le, the expected length of response */
+	    
+		result : (result : JSHORT & result >= 0) 
+   	END;
+	
+	
+	/* combination of setOutgoing(), setOutgoingLength(len) followed by sendBytes(bOff,len). Once this method is invoked,sendBytes() and sendBytesLong() methods cannot be invoked and the APDU buffer must not be altered. 
+Sends len byte response from the APDU buffer starting at the speci?ed offset bOff. */
+	setOutgoingAndSend(bOff ,len) =  
+	/* throws: APDUException */
 	PRE
+	      /* the offset into APDU buffer - APDUException if negative */
 		bOff : JSHORT &
 		bOff >= 0 &
-		len : JSHORT &
-		/*APDUException if 'len' is negative*/
+		/* bytelength of the data to send - APDUException if negative */
+		len : JSHORT & 	
 		len >= 0 & 
+		
 		/*APDUException if 'len' is greater than 256 and 
 		the currently selected applet does not implement 
 		the javacardx.apdu.ExtendedLength interface*/ 
-		len <= 256 & 
-	    (state = STATE_INITIAL or 
-	     state = STATE_PARTIAL_INCOMING or
-	     state = STATE_FULL_INCOMING)
+		len <= 256  
+		
+		/* The APDU state must be one of STATE_INITIAL or 
+		  STATE_PARTIAL_INCOMING or STATE_FULL_INCOMING */
 
 		/*APDUException.IO_ERROR on I/O error*/
 	THEN
-    	/*Verificar ---> lr == 0*/ 	
-	   	state := STATE_FULL_OUTGOING ||
-       	lr := 0
+ 	    /* updates the APDU state to STATE_OUTGOING and 
+	    	returns Le, the expected length of response */
+   	      skip	
    	END;
 	
+	setOutgoingLength(len) = 
+	/* throws: APDUException */
+    	PRE
+    	    len : JSHORT &
+    	    /*APDUException if 'len' is negative*/
+    	    len >= 0 & 
+    	    /*APDUException if 'len' is greater than 256 
+    	    and the currently selected applet does not implement 
+    	    the javacardx.apdu.ExtendedLength interface*/
+	    len <= 256 
+          /* The APDU state must be STATE_OUTGOING */
+          /* APDUException if setOutgoing() or setOutgoingNoChaining() 
+       	not called or if setOutgoingAndSend() already invoked, 
+       	or this method already invoked */
+	    /* APDUException I/O error */
+      THEN
+ 		/* updates the APDU state to STATE_OUTGOING_LENGTH_KNOWN and 
+ 		sets the actual  size of outgoing data */
+ 		skip	   
+   	END;
 
+
+
+ 	result <-- setOutgoingNoChaining = 
+    	
+    		/* The APDU state must be one of STATE_INITIAL or 
+		  STATE_PARTIAL_INCOMING or STATE_FULL_INCOMING */
+		  /* APDUException if this method, or setOutgoing() method 
+		  already invoked*/
+    		/* APDUException I/O error */
+	BEGIN
+ 	    /* updates the APDU state to STATE_OUTGOING and 
+	    	returns Le, the expected length of response */
+		result : (result : JSHORT & result >= 0) 
+   	END;
+
+   
+
+
+	waitExtension = 
+	/* throws: APDUException */
 	
-
-
-	waitExtension = /*APDUException*/
-	/*APDUException.ILLEGAL_USE if setOutgoingNoChaining() 
+	/* APDUException.ILLEGAL_USE if setOutgoingNoChaining() 
 	previously invoked*/
-    /*APDUException.IO_ERROR on I/O error*/
+      /* APDUException.IO_ERROR on I/O error*/
 	BEGIN
 		skip
 	END

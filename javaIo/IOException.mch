@@ -8,11 +8,8 @@ MACHINE
 /*This class extends java.lang.Exception*/
 EXTENDS
     Exception
-       
-CONSTANTS
-    IO_EXCEPTION
     
-PROPERTIES
-    IO_EXCEPTION <: EXCEPTION
+SEES 
+    IOExceptionSet
     
 END
