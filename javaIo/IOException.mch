@@ -10,6 +10,6 @@ EXTENDS
     Exception
     
 SEES 
-    IOExceptionSet
+    javaIOClasses
     
 END
