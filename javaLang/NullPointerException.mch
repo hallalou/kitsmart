@@ -9,7 +9,4 @@ MACHINE
 EXTENDS
 	RuntimeException
 	
-SEES
-    NullPointerExceptionSet
-
 END

@@ -9,8 +9,4 @@ MACHINE
 EXTENDS
     Throwable
     
-SEES 
-    ExceptionSet
-
-
 END

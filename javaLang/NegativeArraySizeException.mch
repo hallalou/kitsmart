@@ -8,8 +8,5 @@ MACHINE
 /*This class extends java.lang.RuntimeException */
 EXTENDS
 	RuntimeException
-	
-SEES
-    NegativeArraySizeExceptionSet
-    
+	    
 END

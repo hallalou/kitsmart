@@ -9,7 +9,4 @@ MACHINE
 EXTENDS
 	IndexOutOfBoundsException
 		
-SEES
-    ArrayIndexOutOfBoundsExceptionSet
-
 END

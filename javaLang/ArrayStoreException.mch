@@ -9,8 +9,4 @@ MACHINE
 EXTENDS
     RuntimeException
     
-SEES
-    ArrayStoreExceptionSet
-
-
 END
