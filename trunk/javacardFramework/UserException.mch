@@ -10,17 +10,7 @@ MACHINE
 EXTENDS
     CardException
     
+SEES
+    JShort
     
-/*This operation is inherited from CardException*/
-/*SEES
- JShort,
- JByte
-
-OPERATIONS
-	throwIt(reason) = 
-	PRE
-		reason : JSHORT
-	THEN
-		skip
-	END*/
 END
