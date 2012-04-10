@@ -2,7 +2,6 @@
 
 = Details =
 
+* IOException.mch - the only class in Java.Io
 
-* javaIo.mch
-
-* javaIoClasses.mch
+* javaIOClasses.mch - abstract set IOEXCEPTION and the corresponding class hierarchy
