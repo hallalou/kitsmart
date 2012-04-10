@@ -18,8 +18,8 @@ SEES
     JBoolean,
     JByte,
     JShort,
-    ObjectSet,
-    AidSet
+    javaLangClasses,
+    javacardFrameworkClasses
 
 OPERATIONS
     

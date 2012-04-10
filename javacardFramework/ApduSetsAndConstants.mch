@@ -7,7 +7,7 @@ MACHINE
 
 SEES
     JByte,
-    ObjectSet    
+    javaLangClasses    
 
 CONCRETE_CONSTANTS
     
