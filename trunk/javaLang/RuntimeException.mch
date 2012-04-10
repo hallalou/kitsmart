@@ -9,7 +9,4 @@ MACHINE
 EXTENDS
     Exception
     
-SEES
-    RuntimeExceptionSet
-
 END

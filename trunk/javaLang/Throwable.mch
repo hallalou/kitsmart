@@ -7,7 +7,6 @@ MACHINE
     
 /*This class extends java.lang.Object*/
 SEES
-    Object,
-    ThrowableSet
+    Object
     
 END
