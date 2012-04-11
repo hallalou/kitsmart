@@ -12,43 +12,44 @@ EXTENDS
 	Object
     
 SEES
- JShort,
- JByte,
- JBoolean,
- Shareable,
- Classes
+	JShort,
+	JByte,
+	JBoolean,
+	Shareable,
+	Classes
 
 CONSTANTS
- MEMORY_TYPE_PERSISTENT,
- MEMORY_TYPE_TRANSIENT_RESET,
- MEMORY_TYPE_TRANSIENT_DESELECT,
- NOT_A_TRANSIENT_OBJECT,
- CLEAR_ON_RESET,
- CLEAR_ON_DESELECT,
-
- MAKEARRAYBOOL,
- MAKEARRAYBYTE,
- MAKEARRAYSHORT,
- MAKEARRAYOBJECT
+	MEMORY_TYPE_PERSISTENT,
+	MEMORY_TYPE_TRANSIENT_RESET,
+	MEMORY_TYPE_TRANSIENT_DESELECT,
+	NOT_A_TRANSIENT_OBJECT,
+	CLEAR_ON_RESET,
+	CLEAR_ON_DESELECT,
+	
+	/*used to return sequences*/
+	MAKEARRAYBOOL,
+	MAKEARRAYBYTE,
+	MAKEARRAYSHORT,
+	MAKEARRAYOBJECT
 
 PROPERTIES
- MEMORY_TYPE_PERSISTENT : JBYTE &
- /*MEMORY_TYPE_PERSISTENT = 0 &*/
- MEMORY_TYPE_TRANSIENT_RESET : JBYTE &
- /*MEMORY_TYPE_TRANSIENT_RESET = 1 &*/
- MEMORY_TYPE_TRANSIENT_DESELECT : JBYTE &
- /*MEMORY_TYPE_TRANSIENT_DESELECT = 2 &*/
- NOT_A_TRANSIENT_OBJECT : JBYTE &
- /*NOT_A_TRANSIENT_OBJECT = 0 &*/
- CLEAR_ON_RESET : JBYTE &
- /*CLEAR_ON_RESET = 1 &*/
- CLEAR_ON_DESELECT : JBYTE &
- /*CLEAR_ON_DESELECT = 2*/
+	MEMORY_TYPE_PERSISTENT : JBYTE &
+	MEMORY_TYPE_PERSISTENT = 0 &
+	MEMORY_TYPE_TRANSIENT_RESET : JBYTE &
+	MEMORY_TYPE_TRANSIENT_RESET = 1 &
+	MEMORY_TYPE_TRANSIENT_DESELECT : JBYTE &
+	MEMORY_TYPE_TRANSIENT_DESELECT = 2 &
+	NOT_A_TRANSIENT_OBJECT : JBYTE &
+	NOT_A_TRANSIENT_OBJECT = 0 &
+	CLEAR_ON_RESET : JBYTE &
+	CLEAR_ON_RESET = 1 &
+	CLEAR_ON_DESELECT : JBYTE &
+	CLEAR_ON_DESELECT = 2 &
 
- MAKEARRAYBOOL : seq(JBOOLEAN) &
- MAKEARRAYBYTE : seq(JBYTE) &
- MAKEARRAYSHORT : seq(JSHORT) &
- MAKEARRAYOBJECT : seq(/*OBJECT*/JSHORT)
+	MAKEARRAYBOOL : seq(JBOOLEAN) &
+	MAKEARRAYBYTE : seq(JBYTE) &
+	MAKEARRAYSHORT : seq(JSHORT) &
+	MAKEARRAYOBJECT : seq(/*OBJECT*/JSHORT)
 
 CONCRETE_VARIABLES
 	transDepth
@@ -75,13 +76,17 @@ OPERATIONS
 		END
 	END;
 
-	arrayBool <-- makeTransienteBooleanArray(length, event) = /*NegativeArraySizeException, SystemException*/
+	arrayBool <-- makeTransienteBooleanArray(length, event) = 
+	/* throws: NegativeArraySizeException,
+		SystemException */
 	PRE
 		length : JSHORT &
-		length >= 0 & /*NegativeArraySizeException if the 'length' parameter is negative*/
+		/*NegativeArraySizeException if the 'length' parameter is negative*/
+		length >= 0 & 
 		event : JBYTE &
+		/*SystemException.ILLEGAL_VALUE if 'event' is not a valid event code*/
 		(event = CLEAR_ON_RESET or
-		event = CLEAR_ON_DESELECT) /*SystemException.ILLEGAL_VALUE if 'event' is not a valid event code*/
+		event = CLEAR_ON_DESELECT) 
 
 		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not available*/
 		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not the currently selected applet context and CLEAR_ON_DESELECT is specified*/
@@ -93,13 +98,17 @@ OPERATIONS
 		END
 	END;
 
-	arrayByte <-- makeTransientByteArray(length, event) = /*NegativeArraySizeException, SystemException*/
+	arrayByte <-- makeTransientByteArray(length, event) = 
+	/* throws: NegativeArraySizeException,
+		SystemException */
 	PRE
 		length : JSHORT &
-		length >= 0 & /*NegativeArraySizeException if the 'length' parameter is negative*/
+		/*NegativeArraySizeException if the 'length' parameter is negative*/
+		length >= 0 & 
 		event : JBYTE &
+		/*SystemException.ILLEGAL_VALUE if 'event' is not a valid event code*/
 		(event = CLEAR_ON_RESET or
-		event = CLEAR_ON_DESELECT) /*SystemException.ILLEGAL_VALUE if 'event' is not a valid event code*/
+		event = CLEAR_ON_DESELECT) 
 
 		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not available*/
 		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not the currently selected applet context and CLEAR_ON_DESELECT is specified*/
@@ -111,13 +120,17 @@ OPERATIONS
 		END
 	END;
 
-	arrayShort <-- makeTransientShortArray(length, event) = /*NegativeArraySizeException, SystemException*/
+	arrayShort <-- makeTransientShortArray(length, event) = 
+	/* throws: NegativeArraySizeException,
+		SystemException */
 	PRE
 		length : JSHORT &
-		length >= 0 & /*NegativeArraySizeException if the 'length' parameter is negative */
+		/*NegativeArraySizeException if the 'length' parameter is negative */
+		length >= 0 & 
 		event : JBYTE &
+		/*SystemException.ILLEGAL_VALUE if 'event' is not a valid event code*/
 		(event = CLEAR_ON_RESET or
-		event = CLEAR_ON_DESELECT) /*SystemException.ILLEGAL_VALUE if 'event' is not a valid event code*/
+		event = CLEAR_ON_DESELECT) 
 
 		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not available*/
 		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not the currently selected applet context and CLEAR_ON_DESELECT is specified*/
@@ -129,13 +142,17 @@ OPERATIONS
 		END
 	END;
 
-	arrayObject <-- makeTransientObjectArray(length, event) = /*NegativeArraySizeException, SystemException*/
+	arrayObject <-- makeTransientObjectArray(length, event) = 
+	/* throws: NegativeArraySizeException,
+		SystemException */
 	PRE
 		length : JSHORT &
-		length >= 0 & /*NegativeArraySizeException if the 'length' parameter is negative */
+		/*NegativeArraySizeException if the 'length' parameter is negative */
+		length >= 0 & 
 		event : JBYTE &
+		/*SystemException.ILLEGAL_VALUE if event is not a valid event code*/
 		(event = CLEAR_ON_RESET or
-		event = CLEAR_ON_DESELECT) /*SystemException.ILLEGAL_VALUE if event is not a valid event code*/
+		event = CLEAR_ON_DESELECT) 
 
 		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not available*/
 		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not the currently selected applet context and CLEAR_ON_DESELECT is specified*/
@@ -165,11 +182,13 @@ OPERATIONS
 		
 	AID <-- lookupAID(buffer, offset, length) = 
 	PRE
+		/*A VM exception is thrown if 'buffer' is null, 
+		or if 'offset' or 'length' are out of range*/
 		buffer : seq1(JBYTE) &
 		offset : JSHORT &
 		offset >= 0 &
 		length : JBYTE &
-		length > 0 /*A VM exception is thrown if 'buffer' is null, or if 'offset' or 'length' are out of range*/
+		length > 0
 	THEN
 		CHOICE
 			/*Assigns a byte array to the variable AID*/
@@ -180,7 +199,8 @@ OPERATIONS
 		END
 	END;
 
-	beginTransaction = /*TransactionException*/
+	beginTransaction = 
+	/* throws: TransactionException*/
 	/*TransactionException.IN_PROGRESS if a transaction is already in progress*/
 	PRE
 		transDepth = 0	
@@ -188,7 +208,8 @@ OPERATIONS
 		transDepth := 1
 	END;
 
-	abortTransaction = /*TransactionException*/
+	abortTransaction = 
+	/* throws: TransactionException*/
 	/*TransactionException.NOT_IN_PROGRESS if a transaction is not in progress.*/
 	PRE
 		transDepth = 1
@@ -196,7 +217,8 @@ OPERATIONS
 		transDepth := 0
 	END;
 	
-	commitTransaction = /*TransactionException*/
+	commitTransaction = 
+	/* throws: TransactionException*/
 	/*TransactionException.NOT_IN_PROGRESS if a transaction is not in progress*/
 	PRE
 		transDepth = 1
@@ -234,7 +256,8 @@ OPERATIONS
 			AID := []
 		END;
 
-	memory <-- getAvailableMemory(memoryType) = /*SystemException*/	
+	memory <-- getAvailableMemory(memoryType) = 
+	/* throws: SystemException*/	
 	PRE
 		memoryType : JBYTE &
 		(memoryType = MEMORY_TYPE_PERSISTENT or
@@ -270,7 +293,8 @@ OPERATIONS
 			result := FALSE
 		END;
 	
-	requestObjectDeletion = /*SystemException*/
+	requestObjectDeletion = 
+	/* throws: SystemException*/
 	/*SystemException.ILLEGAL_USE if the object deletion mechanism is not implemented*/
 		skip;
 

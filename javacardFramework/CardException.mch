@@ -20,11 +20,11 @@ SEES
 
 OPERATIONS
     
-      /* Returns the reason for the exception */
-      reason <-- getReason = 
-      BEGIN
-          reason :: JSHORT
-      END;
+    /* Returns the reason for the exception */
+    reason <-- getReason = 
+    BEGIN
+        reason :: JSHORT
+    END;
 		
 	/* Sets the reason code. */	
 	setReason(reason) = 
