@@ -19,9 +19,9 @@ SEES
 
 OPERATIONS
     
-      /* Returns the reason for the exception */
-      reason <-- getReason = 
-      BEGIN
+    /* Returns the reason for the exception */
+    reason <-- getReason = 
+    BEGIN
 		reason :: JSHORT
 	END;
 
