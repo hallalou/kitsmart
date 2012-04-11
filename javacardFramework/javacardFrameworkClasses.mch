@@ -8,6 +8,10 @@ MACHINE
 SEES
     javaLangClasses
     
+SETS 
+    SHAREABLE,
+    PIN
+    
 CONSTANTS
     CARD_RUNTIME_EXCEPTION,
     CARD_EXCEPTION,

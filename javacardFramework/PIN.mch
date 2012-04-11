@@ -1,4 +1,4 @@
-/* PIN
+/* PIN - This interface represents a PIN.
  * Author: simone
  * Creation date: 23/04/11
  */
@@ -10,38 +10,62 @@ SEES
  JShort
 
 OPERATIONS
-
-	numtime <-- getTriesRemaining =
-		ANY pin_numtime
-		WHERE (pin_numtime : JBYTE) & (pin_numtime >= 0)
-		THEN numtime := pin_numtime
-		END;
-
-	result <-- check(pin, offset, length) =
+    
+    /* Compares pin against the PIN value. If they match and the PIN is not
+    * blocked, sets the validated ?ag and resets the try counter to its
+    * maximum. If it does not match, it decrements the try counter and, if 
+    * the counter has reached zero, blocks the PIN. */
+    
+    result <-- check(pin, offset, length) =
+	/* throws: ArrayIndexOutOfBoundsException, 
+		     NullPointerException */
 	PRE
-		pin : seq1(JBYTE) & /*NullPointerException if 'pin' is null*/
+	    /* the byte array to be compared with PIN. */
+	    /* NullPointerException if 'pin' is null*/         
+	    pin : seq1(JBYTE) & 
+	    
+	    /* the starting offset in thepin array */
+	    /* ArrayIndexOutOfBoundsException if 'offset' is negative*/
 		offset : JSHORT &
-		offset >= 0 & /*ArrayIndexOutOfBoundsException If 'offset' parameter is negative*/
-		length : JBYTE &
-		length >= 0 & /*ArrayIndexOutOfBoundsException If 'length' parameter is negative*/
-		(offset + length) <= size(pin) /*ArrayIndexOutOfBoundsException*/
+		offset >= 0 & 
 		
-		/*ArrayIndexOutOfBoundsException if the check operation would cause access of data outside array bounds*/
-	THEN
+	    /* the length of pin */ 	
+	    /* ArrayIndexOutOfBoundsException if 'length' is negative*/
+		length : JBYTE &
+		length >= 0 & 
+		
+	    /* ArrayIndexOutOfBoundsException */	
+		(offset + length) <= size(pin) 
+		
+	THEN  
 		CHOICE
-			result := TRUE
+			result := TRUE /* if the PIN value matches */
 		OR
-			result := FALSE
+			result := FALSE /* otherwise */
 		END
 	END;
+	
+	
+	/* Returns the number of times remaining that an incorrect PIN can be
+	 * presented before the PIN is blocked. */
+	 tries <-- getTriesRemaining =
+	 BEGIN
+		tries : ((tries : JBYTE) & (tries >= 0))
+	 END;
 
+
+	/* Returns true if a valid PIN value has been presented since the last
+	 * card reset or last call to reset(). */
 	result <-- isValidated =
 		CHOICE
-			result := TRUE
+			result := TRUE /* if validated */
 		OR
-			result := FALSE
+			result := FALSE /* otherwise */
 		END;
-
+		
+	/* If the validated flag is set, resets the validated flag
+	* and resets the PIN try counter to the value of the PIN try limit. If
+	* the validated flag is not set, this method does nothing. */
 	reset = skip
 
 END

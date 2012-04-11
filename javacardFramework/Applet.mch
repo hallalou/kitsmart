@@ -8,10 +8,8 @@ MACHINE
     Applet
     
 /*ATENTION This class extends Object (java.lang.Object)*/
-EXTENDS
-	Object    
-    
 SEES
+	Object,
 	JByte,
 	JShort,
 	Shareable,
