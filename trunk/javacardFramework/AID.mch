@@ -1,5 +1,5 @@
 /* AID
- * Author: simone
+ * Author: simone, Anamaria
  * Creation date: 05/06/11
  *
  * This class encapsulates the Application Identifier (AID) associated with 
@@ -12,9 +12,7 @@ MACHINE
     
 /*This class extends Object (java.lang.Object)*/
 SEES
-    Object  
-
-SEES
+    Object,  
     JBoolean,
     JByte,
     JShort,
