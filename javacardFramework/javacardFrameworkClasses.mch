@@ -8,9 +8,12 @@ MACHINE
 SEES
     javaLangClasses
     
-SETS 
-    SHAREABLE,
-    PIN
+SETS /* to be able to refer to JC API interfaces to type data */
+    SHAREABLE; 		/* to be implemented by applets */
+    PIN;
+    APPLET_EVENT; 	/* to be implemented by applets */
+    ISO7816;  		/* only defines ISO 7816 constants */
+    MULTISELECTABLE 	/* to be implemented by applets */
     
 CONSTANTS
     CARD_RUNTIME_EXCEPTION,
@@ -20,7 +23,9 @@ CONSTANTS
     SYSTEM_EXCEPTION,
     TRANSACTION_EXCEPTION, 
     USER_EXCEPTION,
-    AID
+    APDU_EXCEPTION,
+    AID,
+    OWNER_PIN
     
     
 PROPERTIES
@@ -31,6 +36,8 @@ PROPERTIES
     SYSTEM_EXCEPTION <: CARD_RUNTIME_EXCEPTION &
     TRANSACTION_EXCEPTION <: CARD_RUNTIME_EXCEPTION &
     USER_EXCEPTION <: EXCEPTION &
-    AID <: OBJECT
+    APDU_EXCEPTION <: CARD_RUNTIME_EXCEPTION &
+    AID <: OBJECT &
+    OWNER_PIN <: OBJECT
 
 END

@@ -12,7 +12,7 @@ SEES
 OPERATIONS
     
     /* Compares pin against the PIN value. If they match and the PIN is not
-    * blocked, sets the validated ?ag and resets the try counter to its
+    * blocked, sets the validated flag and resets the try counter to its
     * maximum. If it does not match, it decrements the try counter and, if 
     * the counter has reached zero, blocks the PIN. */
     
@@ -24,7 +24,7 @@ OPERATIONS
 	    /* NullPointerException if 'pin' is null*/         
 	    pin : seq1(JBYTE) & 
 	    
-	    /* the starting offset in thepin array */
+	    /* the starting offset in the pin array */
 	    /* ArrayIndexOutOfBoundsException if 'offset' is negative*/
 		offset : JSHORT &
 		offset >= 0 & 
