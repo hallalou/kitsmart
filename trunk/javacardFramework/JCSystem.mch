@@ -33,16 +33,22 @@ CONSTANTS
 	MAKEARRAYOBJECT
 
 PROPERTIES
-	MEMORY_TYPE_PERSISTENT : JBYTE &
+    
+      MEMORY_TYPE_PERSISTENT : JBYTE &
 	MEMORY_TYPE_PERSISTENT = 0 &
+	
 	MEMORY_TYPE_TRANSIENT_RESET : JBYTE &
 	MEMORY_TYPE_TRANSIENT_RESET = 1 &
+	
 	MEMORY_TYPE_TRANSIENT_DESELECT : JBYTE &
 	MEMORY_TYPE_TRANSIENT_DESELECT = 2 &
+	
 	NOT_A_TRANSIENT_OBJECT : JBYTE &
 	NOT_A_TRANSIENT_OBJECT = 0 &
+	
 	CLEAR_ON_RESET : JBYTE &
 	CLEAR_ON_RESET = 1 &
+	
 	CLEAR_ON_DESELECT : JBYTE &
 	CLEAR_ON_DESELECT = 2 &
 
@@ -51,18 +57,91 @@ PROPERTIES
 	MAKEARRAYSHORT : seq(JSHORT) &
 	MAKEARRAYOBJECT : seq(/*OBJECT*/JSHORT)
 
-CONCRETE_VARIABLES
-	transDepth
-	
-INVARIANT
-	transDepth : JBYTE &
-	(transDepth = 0 or transDepth = 1)
-	
-INITIALISATION
-	transDepth := 0
-
 OPERATIONS
-	result <-- isTransient(theObj) = 
+    
+      /* Aborts the atomic transaction. 
+       The contents of the commit buffer are discarded. */
+	abortTransaction = 
+	/* throws: TransactionException */
+	/* TransactionException.NOT_IN_PROGRESS if a transaction is not in progress.*/
+	BEGIN
+	    skip
+	END;
+	
+	/* Begins an atomic transaction. */
+	beginTransaction = 
+	/* throws: TransactionException */
+	/* TransactionException.IN_PROGRESS if a transaction is already in progress*/
+	BEGIN
+	    skip
+	END;
+	
+	/* Commits an atomic transaction. 
+	   The contents of commit buffer are atomically committed. */
+	commitTransaction = 
+	/* throws: TransactionException */
+	/* TransactionException.NOT_IN_PROGRESS if a transaction is not in progress */
+	BEGIN
+	    skip
+	END;
+	
+	/* Returns the JCRE-owned instance of the AID object associated with 
+	   the current applet context, or null if the Applet.register() method 
+	   has not yet been invoked. */
+	aid <-- getAID =
+	BEGIN
+		aid :: AID
+	END;
+	
+	/* Called by a client applet to get a server applet?s shareable 
+	   interface object. */
+	result <-- getAppletShareableInterfaceObject(serverAID, parameter) = 
+	/* throws: SecurityException */ 
+	PRE
+		/*  the AID of the server applet */
+		serverAID : AID &
+		/* optional parameter data */
+		parameter : JBYTE
+
+		/* SecurityException - if the server applet is not multiselectable 			and is currently active on another logical channel */
+	THEN
+		result :: SHAREABLE
+	END;
+	
+	
+	/* called to obtain the logical channel number assigned to the 
+	   currently selected applet instance. */
+	channel <-- getAssignedChannel = 
+	BEGIN
+		channel : ((channel : JBYTE) & (channel : 0 .. 19))
+	END;
+
+	/* Obtains the amount of memory of the speci?ed type that is 
+	   available to the applet. */
+	memory <-- getAvailableMemory(memoryType) = 
+	/* throws: SystemException */	
+	PRE
+	    /* the type of memory being queried */
+	    /* SystemException.ILLEGAL_VALUE if memoryType is not a valid 	
+	       memory type. */
+		memoryType : JBYTE &
+	      (memoryType = MEMORY_TYPE_PERSISTENT or
+		memoryType = MEMORY_TYPE_TRANSIENT_RESET or
+		memoryType = MEMORY_TYPE_TRANSIENT_DESELECT)
+	THEN
+		memory :: JSHORT
+	END;
+	
+	/* Returns the total number of bytes in the commit buffer. */
+	numBytes <-- getMaxCommitCapacity = 
+	BEGIN
+	    numBytes : ((numBytes : JSHORT) & 
+	                 (numBytes >= 0) & (numBytes <= 32767))
+	END;
+	
+	
+	
+    result <-- isTransient(theObj) = 
 	PRE
 		/*theObj's type is Object*/
 		theObj : JSHORT/*OBJECT*/
@@ -170,15 +249,6 @@ OPERATIONS
 		version :: JSHORT	
 	END;
 
-	AID <-- getAID =
-	BEGIN
-		/*Assigns a byte array to the variable AID or null*/
-		CHOICE
-		    AID := MAKEARRAYBYTE
-		OR
-		    AID := []
-		END
-	END;
 		
 	AID <-- lookupAID(buffer, offset, length) = 
 	PRE
@@ -199,32 +269,6 @@ OPERATIONS
 		END
 	END;
 
-	beginTransaction = 
-	/* throws: TransactionException*/
-	/*TransactionException.IN_PROGRESS if a transaction is already in progress*/
-	PRE
-		transDepth = 0	
-	THEN
-		transDepth := 1
-	END;
-
-	abortTransaction = 
-	/* throws: TransactionException*/
-	/*TransactionException.NOT_IN_PROGRESS if a transaction is not in progress.*/
-	PRE
-		transDepth = 1
-	THEN
-		transDepth := 0
-	END;
-	
-	commitTransaction = 
-	/* throws: TransactionException*/
-	/*TransactionException.NOT_IN_PROGRESS if a transaction is not in progress*/
-	PRE
-		transDepth = 1
-	THEN
-		transDepth := 0
-	END;
 
 	result <-- getTransactionDepth = 
 		CHOICE
@@ -240,12 +284,6 @@ OPERATIONS
 		THEN numBytes := jcsystem_numBytes
 		END;
 
-	numBytes <-- getMaxCommitCapacity = 
-		ANY jcsystem_numBytes
-		WHERE (jcsystem_numBytes : JSHORT) &
-		(jcsystem_numBytes <= 32767)
-		THEN numBytes := jcsystem_numBytes
-		END;
 
 	AID <-- getPreviousContextAID = 
 		CHOICE
@@ -256,35 +294,7 @@ OPERATIONS
 			AID := []
 		END;
 
-	memory <-- getAvailableMemory(memoryType) = 
-	/* throws: SystemException*/	
-	PRE
-		memoryType : JBYTE &
-		(memoryType = MEMORY_TYPE_PERSISTENT or
-		memoryType = MEMORY_TYPE_TRANSIENT_RESET or
-		memoryType = MEMORY_TYPE_TRANSIENT_DESELECT) /*SystemException.ILLEGAL_VALUE if memoryType is not a valid memory type. */
-	THEN
-		memory :: JSHORT
-	END;
 
-	result <-- getAppletShareableInterfaceObject(serverAID, parameter) = 
-	PRE
-		/*serverAID's type is AID*/
-		serverAID : seq(JBYTE) &
-		parameter : JBYTE
-
-		/*SecurityException - if the server applet is not multiselectable and is currently active on another logical channel */
-	THEN
-		CHOICE
-				result := rec(object : SHAREABLEobject , null : FALSE)
-			OR
-				ANY vv WHERE vv : CLASSES
-				THEN
-					result := rec(object : vv, null : TRUE)
-				END 
-			END
-		/*END*/
-	END;
 
 	result <-- isObjectDeletionSupported = 
 		CHOICE
@@ -298,12 +308,6 @@ OPERATIONS
 	/*SystemException.ILLEGAL_USE if the object deletion mechanism is not implemented*/
 		skip;
 
-	channel <-- getAssignedChannel = 
-		ANY jcsystem_channel
-		WHERE (jcsystem_channel : JBYTE) &
-		(jcsystem_channel : 0 .. 19)
-		THEN channel := jcsystem_channel
-		END;
 
 	result <-- isAppletActive(theApplet) = 
 	PRE

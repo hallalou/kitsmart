@@ -13,7 +13,9 @@ SEES
  JShort,
  JByte,
  ApduSetsAndConstants,
- ISO7816
+ ISO7816,
+ javacardFrameworkClasses
+ 
  
 DEFINITIONS
     /* Some auxiliary names (not part of the API specification) */
