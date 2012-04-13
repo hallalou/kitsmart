@@ -12,9 +12,11 @@ SETS /* to be able to refer to JC API interfaces to type data */
     SHAREABLE; 		/* to be implemented by applets */
     PIN;
     APPLET_EVENT; 	/* to be implemented by applets */
-    ISO7816;  		/* only defines ISO 7816 constants */
     MULTISELECTABLE 	/* to be implemented by applets */
     
+    /* ISO7816  - this interface only defines ISO 7816 constants, should not 	
+    appear as a type */
+
 CONSTANTS
     CARD_RUNTIME_EXCEPTION,
     CARD_EXCEPTION,
@@ -25,7 +27,8 @@ CONSTANTS
     USER_EXCEPTION,
     APDU_EXCEPTION,
     AID,
-    OWNER_PIN
+    OWNER_PIN,
+    APDU
     
     
 PROPERTIES
@@ -38,6 +41,7 @@ PROPERTIES
     USER_EXCEPTION <: EXCEPTION &
     APDU_EXCEPTION <: CARD_RUNTIME_EXCEPTION &
     AID <: OBJECT &
-    OWNER_PIN <: OBJECT
+    OWNER_PIN <: OBJECT &
+    APDU <: OBJECT 
 
 END

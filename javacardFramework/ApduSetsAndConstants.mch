@@ -10,10 +10,7 @@ SEES
     javaLangClasses    
 
 CONCRETE_CONSTANTS
-    
-    /* The universe of APDU objects, representing the APDU type in javacard */
-    	APDU,
-    
+        
      /* STATE_.. constants which represent the various processing states of 
     the APDU. Low level requirements such as error state constants being
     negative are not modeled here. 
@@ -42,8 +39,6 @@ CONCRETE_CONSTANTS
  	
 PROPERTIES
     
-	/* APDUs are objects */
-	APDU <: OBJECT &
  
 	/* APDU state constants - values defined in 	
 	http://www.win.tue.nl/pinpasjc/docs/apis/jc222/index.html */
