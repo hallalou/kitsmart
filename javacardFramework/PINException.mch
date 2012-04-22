@@ -22,4 +22,26 @@ PROPERTIES
  ILLEGAL_VALUE : JSHORT &
  ILLEGAL_VALUE = 1
  
+OPERATIONS
+
+	/*Constructs a PINException.*/
+	C_PINException(reason) =
+	PRE
+		/*the reason for the exception*/
+		reason : JSHORT
+	THEN
+		skip
+	END;
+
+/*---------------------------------------------------------------------*/ 
+	/* Throws the JCRE-owned instance of PINException with the specified reason. */
+	throwIt_4 (reason) =
+	/* throws: PINException (always)*/
+	PRE
+		/*the reason for the exception*/
+		reason : JSHORT
+	THEN
+		skip
+	END
+ 
 END

@@ -14,32 +14,54 @@ EXTENDS
     CardRuntimeException
     
 SEES
-    JShort
+	JShort
     
 CONSTANTS
- IN_PROGRESS,
- NOT_IN_PROGRESS,
- BUFFER_FULL,
- INTERNAL_FAILURE
+	IN_PROGRESS,
+	NOT_IN_PROGRESS,
+	BUFFER_FULL,
+	INTERNAL_FAILURE
 
 PROPERTIES
     
- /* a transaction is already in progress */
- IN_PROGRESS : JSHORT &
- IN_PROGRESS = 1 &
+	/* a transaction is already in progress */
+	IN_PROGRESS : JSHORT &
+	IN_PROGRESS = 1 &
  
- /* a transaction is not in progress */
- NOT_IN_PROGRESS : JSHORT & 
- NOT_IN_PROGRESS = 2 &
+	/* a transaction is not in progress */
+	NOT_IN_PROGRESS : JSHORT & 
+	NOT_IN_PROGRESS = 2 &
  
  
- /* the commit buffer is full */
- BUFFER_FULL : JSHORT &
- BUFFER_FULL = 3 &
+	/* the commit buffer is full */
+	BUFFER_FULL : JSHORT &
+	BUFFER_FULL = 3 &
  
- /*  an internal Java Card runtime environment problem (fatal error) */
- INTERNAL_FAILURE : JSHORT &
- INTERNAL_FAILURE = 4
- 
+	/*  an internal Java Card runtime environment problem (fatal error) */
+	INTERNAL_FAILURE : JSHORT &
+	INTERNAL_FAILURE = 4
+
+OPERATIONS
+
+	/*Constructs a TransactionException with the specified reason.*/
+	C_TransactionException(reason) =
+	PRE
+		/*the reason for the exception*/
+		reason : JSHORT
+	THEN
+		skip
+	END;
+
+/*---------------------------------------------------------------------*/ 
+	/*Throws the JCRE-owned instance of TransactionException with the 
+	specified reason.*/
+	throwIt_6 (reason) =
+	/* throws: TransactionException (always)*/
+	PRE
+		/*the reason for the exception*/
+		reason : JSHORT
+	THEN
+		skip
+	END
 
 END

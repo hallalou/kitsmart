@@ -15,4 +15,27 @@ EXTENDS
 SEES
     JShort
     
+OPERATIONS
+
+	/*Constructs an ISOException instance with the specified status word.*/
+	C_ISOException(sw) =
+	PRE
+		/*the ISO 7816-4 defined status word*/
+		sw : JSHORT
+	THEN
+		skip
+	END;
+
+/*---------------------------------------------------------------------*/ 
+	/* Throws the JCRE-owned instance of the ISOException class 
+	with the specified status word. */
+	throwIt_3 (sw) =
+	/* throws: ISOException (always)*/
+	PRE
+		/*ISO 7816-4 defined status word*/
+		sw : JSHORT
+	THEN
+		skip
+	END
+	
 END
