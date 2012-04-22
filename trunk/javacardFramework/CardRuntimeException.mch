@@ -18,29 +18,44 @@ SEES
     JShort
 
 OPERATIONS
-    
-    /* Returns the reason for the exception */
-    reason <-- getReason = 
-    BEGIN
-		reason :: JSHORT
-	END;
 
-	/* Sets the reason code. */
-	setReason (reason) = 
+	/*Constructs a CardRuntimeException instance with the specified reason.*/
+	C_CardRuntimeException(reason) =
 	PRE
+		/*the reason for the exception.*/
 		reason : JSHORT
 	THEN
 		skip
 	END;
 
+/*---------------------------------------------------------------------*/    
+    /* Returns the reason for the exception */
+    reason <-- getReason = 
+    BEGIN
+		/*the reason for the exception*/
+		reason :: JSHORT
+	END;
 
+/*---------------------------------------------------------------------*/
+	/* Sets the reason code. */
+	setReason (reason) = 
+	PRE
+		/*the reason for the exception*/
+		reason : JSHORT
+	THEN
+		skip
+	END;
+
+/*---------------------------------------------------------------------*/
 	/* Throws the JCRE-owned instance of the CardRuntimeException class with 
 	the speci?ed reason. */
-	throwIt (reason) = 
+	throwIt_1 (reason) = 
 	/* throws: CardRuntimeException (always)*/
 	PRE
+		/*the reason for the exception*/
 		reason : JSHORT
 	THEN
 		skip
 	END
+	
 END

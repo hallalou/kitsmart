@@ -12,5 +12,28 @@ EXTENDS
     
 SEES
     JShort
+	
+OPERATIONS
+
+	/*Constructs a UserException with the specified reason.*/
+	C_UserException(reason) =
+	PRE
+		/*the reason for the exception*/
+		reason : JSHORT
+	THEN
+		skip
+	END;
+
+/*--------------------------------------------------------------------------*/
+	/*Throws the JCRE-owned instance of UserException with 
+	the specified reason.*/
+	throwIt_2(reason) = 
+	/* throws: UserException (always)*/
+	PRE
+		/*the reason for the exception*/
+		reason : JSHORT
+	THEN
+		skip
+	END
     
 END
