@@ -59,15 +59,16 @@ PROPERTIES
 
 OPERATIONS
     
-      /* Aborts the atomic transaction. 
-       The contents of the commit buffer are discarded. */
+    /* Aborts the atomic transaction. 
+    The contents of the commit buffer are discarded. */
 	abortTransaction = 
 	/* throws: TransactionException */
 	/* TransactionException.NOT_IN_PROGRESS if a transaction is not in progress.*/
 	BEGIN
 	    skip
 	END;
-	
+
+/*-------------------------------------------------------------------------------*/
 	/* Begins an atomic transaction. */
 	beginTransaction = 
 	/* throws: TransactionException */
@@ -75,7 +76,8 @@ OPERATIONS
 	BEGIN
 	    skip
 	END;
-	
+
+/*-------------------------------------------------------------------------------*/	
 	/* Commits an atomic transaction. 
 	   The contents of commit buffer are atomically committed. */
 	commitTransaction = 
@@ -84,7 +86,8 @@ OPERATIONS
 	BEGIN
 	    skip
 	END;
-	
+
+/*-------------------------------------------------------------------------------*/	
 	/* Returns the JCRE-owned instance of the AID object associated with 
 	   the current applet context, or null if the Applet.register() method 
 	   has not yet been invoked. */
@@ -92,7 +95,8 @@ OPERATIONS
 	BEGIN
 		aid :: AID
 	END;
-	
+
+/*-------------------------------------------------------------------------------*/	
 	/* Called by a client applet to get a server applet?s shareable 
 	   interface object. */
 	result <-- getAppletShareableInterfaceObject(serverAID, parameter) = 
@@ -108,7 +112,7 @@ OPERATIONS
 		result :: SHAREABLE
 	END;
 	
-	
+/*-------------------------------------------------------------------------------*/	
 	/* called to obtain the logical channel number assigned to the 
 	   currently selected applet instance. */
 	channel <-- getAssignedChannel = 
@@ -116,6 +120,7 @@ OPERATIONS
 		channel : ((channel : JBYTE) & (channel : 0 .. 19))
 	END;
 
+/*-------------------------------------------------------------------------------*/
 	/* Obtains the amount of memory of the speci?ed type that is 
 	   available to the applet. */
 	memory <-- getAvailableMemory(memoryType) = 
@@ -125,26 +130,25 @@ OPERATIONS
 	    /* SystemException.ILLEGAL_VALUE if memoryType is not a valid 	
 	       memory type. */
 		memoryType : JBYTE &
-	      (memoryType = MEMORY_TYPE_PERSISTENT or
+	    (memoryType = MEMORY_TYPE_PERSISTENT or
 		memoryType = MEMORY_TYPE_TRANSIENT_RESET or
 		memoryType = MEMORY_TYPE_TRANSIENT_DESELECT)
 	THEN
 		memory :: JSHORT
 	END;
-	
+
+/*-------------------------------------------------------------------------------*/
 	/* Returns the total number of bytes in the commit buffer. */
 	numBytes <-- getMaxCommitCapacity = 
 	BEGIN
 	    numBytes : ((numBytes : JSHORT) & 
-	                 (numBytes >= 0) & (numBytes <= 32767))
+	    (numBytes >= 0) & (numBytes <= 32767))
 	END;
 	
-	
-	
+/*-------------------------------------------------------------------------------*/	
     result <-- isTransient(theObj) = 
 	PRE
-		/*theObj's type is Object*/
-		theObj : JSHORT/*OBJECT*/
+		theObj : OBJECT
 	THEN
 		CHOICE
 			result := NOT_A_TRANSIENT_OBJECT
@@ -155,108 +159,141 @@ OPERATIONS
 		END
 	END;
 
+/*-------------------------------------------------------------------------------*/
 	arrayBool <-- makeTransienteBooleanArray(length, event) = 
 	/* throws: NegativeArraySizeException,
 		SystemException */
 	PRE
-		length : JSHORT &
+		/* length - the length of the boolean array */
 		/*NegativeArraySizeException if the 'length' parameter is negative*/
+		length : JSHORT &		
 		length >= 0 & 
-		event : JBYTE &
+		
+		/*event - the CLEAR_ON... event which causes the array elements to be 
+		cleared */
 		/*SystemException.ILLEGAL_VALUE if 'event' is not a valid event code*/
+		event : JBYTE &		
 		(event = CLEAR_ON_RESET or
 		event = CLEAR_ON_DESELECT) 
 
-		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not available*/
-		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not the currently selected applet context and CLEAR_ON_DESELECT is specified*/
+		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is 
+		not available*/
+		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not 
+		the currently selected applet context and CLEAR_ON_DESELECT is specified*/
 	THEN
 		/*ATENTION in how the array was returned */
 		ANY jcsystem_arrayBool
-		WHERE (jcsystem_arrayBool : MAKEARRAYBOOL) /*& (size(anyArrayBool) = length)*/
+		WHERE (jcsystem_arrayBool : MAKEARRAYBOOL)
 		THEN arrayBool := jcsystem_arrayBool
 		END
 	END;
 
+/*-------------------------------------------------------------------------------*/
 	arrayByte <-- makeTransientByteArray(length, event) = 
 	/* throws: NegativeArraySizeException,
 		SystemException */
 	PRE
-		length : JSHORT &
-		/*NegativeArraySizeException if the 'length' parameter is negative*/
+		/* length - the length of the byte array */
+		/* NegativeArraySizeException if the 'length' parameter is negative */
+		length : JSHORT &		
 		length >= 0 & 
-		event : JBYTE &
+		
+		/* event - the CLEAR_ON... event which causes the array elements to be 
+		cleared */
 		/*SystemException.ILLEGAL_VALUE if 'event' is not a valid event code*/
+		event : JBYTE &		
 		(event = CLEAR_ON_RESET or
 		event = CLEAR_ON_DESELECT) 
 
-		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not available*/
-		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not the currently selected applet context and CLEAR_ON_DESELECT is specified*/
+		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not 
+		available*/
+		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not 
+		the currently selected applet context and CLEAR_ON_DESELECT is specified*/
 	THEN
 		/*ATENTION in how the array was returned */
 		ANY jcsystem_arrayByte
-		WHERE (jcsystem_arrayByte : MAKEARRAYBYTE) /*& (size(anyArrayByte) = length)*/
+		WHERE (jcsystem_arrayByte : MAKEARRAYBYTE)
 		THEN arrayByte := jcsystem_arrayByte
 		END
 	END;
 
+/*-------------------------------------------------------------------------------*/
 	arrayShort <-- makeTransientShortArray(length, event) = 
 	/* throws: NegativeArraySizeException,
 		SystemException */
 	PRE
-		length : JSHORT &
+		/* length - the length of the short array */
 		/*NegativeArraySizeException if the 'length' parameter is negative */
-		length >= 0 & 
-		event : JBYTE &
+		length : JSHORT &		
+		length >= 0 &
+		
+		/* event - the CLEAR_ON... event which causes the array elements to be 
+		cleared */
 		/*SystemException.ILLEGAL_VALUE if 'event' is not a valid event code*/
+		event : JBYTE &		
 		(event = CLEAR_ON_RESET or
 		event = CLEAR_ON_DESELECT) 
 
-		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not available*/
-		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not the currently selected applet context and CLEAR_ON_DESELECT is specified*/
+		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not 
+		available*/
+		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not 
+		the currently selected applet context and CLEAR_ON_DESELECT is specified*/
 	THEN
 		/*ATENTION in how the array was returned */
 		ANY jcsystem_arrayShort
-		WHERE (jcsystem_arrayShort : MAKEARRAYSHORT) /*& (size(anyArrayShort) = length)*/
+		WHERE (jcsystem_arrayShort : MAKEARRAYSHORT)
 		THEN arrayShort := jcsystem_arrayShort
 		END
 	END;
 
+/*-------------------------------------------------------------------------------*/
 	arrayObject <-- makeTransientObjectArray(length, event) = 
 	/* throws: NegativeArraySizeException,
 		SystemException */
 	PRE
-		length : JSHORT &
+		/* length - the length of the Object array */
 		/*NegativeArraySizeException if the 'length' parameter is negative */
-		length >= 0 & 
-		event : JBYTE &
+		length : JSHORT &		
+		length >= 0 &
+		
+		/* event - the CLEAR_ON... event which causes the array elements to be 
+		cleared */
 		/*SystemException.ILLEGAL_VALUE if event is not a valid event code*/
+		event : JBYTE &		
 		(event = CLEAR_ON_RESET or
 		event = CLEAR_ON_DESELECT) 
 
-		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not available*/
-		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not the currently selected applet context and CLEAR_ON_DESELECT is specified*/
+		/*SystemException.NO_TRANSIENT_SPACE if sufficient transient space is not 
+		available*/
+		/*SystemException.ILLEGAL_TRANSIENT if the current applet context is not 
+		the currently selected applet context and CLEAR_ON_DESELECT is specified*/
 	THEN
 		/*ATENTION in how the array was returned */
-		/* the type is object, but was made as a short*/
 		ANY jcsystem_arrayObject
-		WHERE (jcsystem_arrayObject : MAKEARRAYOBJECT) /*& (size(anyArrayObject) = length)*/
+		WHERE (jcsystem_arrayObject : MAKEARRAYOBJECT)
 		THEN arrayObject := jcsystem_arrayObject
 		END
 	END;
 
+/*-------------------------------------------------------------------------------*/
 	version <-- getVersion =
 	BEGIN
 		version :: JSHORT	
 	END;
 
-		
+/*-------------------------------------------------------------------------------*/		
 	AID <-- lookupAID(buffer, offset, length) = 
 	PRE
+		/* buffer - byte array containing the AID bytes */
 		/*A VM exception is thrown if 'buffer' is null, 
 		or if 'offset' or 'length' are out of range*/
 		buffer : seq1(JBYTE) &
+		
+		/* offset - offset within buffer where AID bytes begin */
 		offset : JSHORT &
 		offset >= 0 &
+		
+		/* length - length of AID bytes in buffer */
 		length : JBYTE &
 		length > 0
 	THEN
@@ -269,14 +306,15 @@ OPERATIONS
 		END
 	END;
 
-
+/*-------------------------------------------------------------------------------*/
 	result <-- getTransactionDepth = 
 		CHOICE
 			result := 1
 		OR
 			result := 0
 		END;
-	
+
+/*-------------------------------------------------------------------------------*/		
 	numBytes <-- getUnusedCommitCapacity = 
 		ANY jcsystem_numBytes
 		WHERE (jcsystem_numBytes : JSHORT) &
@@ -284,7 +322,7 @@ OPERATIONS
 		THEN numBytes := jcsystem_numBytes
 		END;
 
-
+/*-------------------------------------------------------------------------------*/
 	AID <-- getPreviousContextAID = 
 		CHOICE
 			/*Assigns a byte array to the variable AID*/
@@ -294,25 +332,24 @@ OPERATIONS
 			AID := []
 		END;
 
-
-
+/*-------------------------------------------------------------------------------*/
 	result <-- isObjectDeletionSupported = 
 		CHOICE
 			result := TRUE
 		OR
 			result := FALSE
 		END;
-	
+
+/*-------------------------------------------------------------------------------*/		
 	requestObjectDeletion = 
 	/* throws: SystemException*/
 	/*SystemException.ILLEGAL_USE if the object deletion mechanism is not implemented*/
 		skip;
 
-
+/*-------------------------------------------------------------------------------*/
 	result <-- isAppletActive(theApplet) = 
 	PRE
-		/*theApplet's type is AID, AID can returns bytes or bool*/
-		theApplet : seq(JBYTE)
+		theApplet : seq(AID)
 	THEN
 		CHOICE
 			result := TRUE

@@ -45,7 +45,7 @@ OPERATIONS
 		END
 	END;
 	
-	
+/*-------------------------------------------------------------------------------*/	
 	/* Returns the number of times remaining that an incorrect PIN can be
 	 * presented before the PIN is blocked. */
 	 tries <-- getTriesRemaining =
@@ -53,7 +53,7 @@ OPERATIONS
 		tries : ((tries : JBYTE) & (tries >= 0))
 	 END;
 
-
+/*-------------------------------------------------------------------------------*/
 	/* Returns true if a valid PIN value has been presented since the last
 	 * card reset or last call to reset(). */
 	result <-- isValidated =
@@ -62,7 +62,8 @@ OPERATIONS
 		OR
 			result := FALSE /* otherwise */
 		END;
-		
+
+/*-------------------------------------------------------------------------------*/		
 	/* If the validated flag is set, resets the validated flag
 	* and resets the PIN try counter to the value of the PIN try limit. If
 	* the validated flag is not set, this method does nothing. */

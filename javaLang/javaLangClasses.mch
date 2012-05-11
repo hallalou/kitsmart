@@ -9,9 +9,10 @@ MACHINE
     javaLangClasses
         
 SETS
-    OBJECT 
+    CLASS_TYPE /* root of the hierarchy of class and interfaces */
     
-CONSTANTS
+CONSTANTS /* to be able to refer to JC API classes to type data */
+	OBJECT,
     THROWABLE,
     EXCEPTION,
     RUNTIME_EXCEPTION,
@@ -25,6 +26,7 @@ CONSTANTS
     ARRAY_INDEX_OUT_OF_BOUNDS_EXCEPTION
        
 PROPERTIES
+	OBJECT <: CLASS_TYPE &
     THROWABLE <: OBJECT &
     EXCEPTION <: THROWABLE &
     RUNTIME_EXCEPTION <: EXCEPTION &

@@ -14,8 +14,8 @@ SEES
     javacardFrameworkClasses,	
     JByte,
     JShort,
-    Shareable /* only for documentation, as the SET SHAREABLE is declared in
-    			javacardFrameworkClasses */
+    Shareable /* only for documentation, as the CONSTANT SHAREABLE is declared in 
+	javacardFrameworkClasses */
     /* ApduSetsAndConstants */
 
 OPERATIONS
@@ -28,12 +28,13 @@ OPERATIONS
     package is still active on any other logical channel. 
     The default implementation of this method provided by Applet class does 
     nothing. */
-    	deselect =
+    
+	deselect =
 	BEGIN
 		skip
 	END;
 
-
+/*------------------------------------------------------------------------------*/
 	/* Called by the JCRE to obtain a shareable interface object from this
 	server applet, on behalf of a request from a client applet. */
 
@@ -50,7 +51,7 @@ OPERATIONS
 	    interface :: SHAREABLE
 	END;
 
-
+/*------------------------------------------------------------------------------*/
 	/* Called by the JCRE to create an instance of the Applet subclass */
 	install(bArray, bOffset, bLength) = 
 	/* throws: ISOException */
@@ -86,6 +87,7 @@ OPERATIONS
 	   /* ISOException if the install method fails */
 	END;
 
+/*------------------------------------------------------------------------------*/
 	/* Called by the JCRE to process an incoming APDU command. */	
 	process(apdu) = 
 	/* throws: ISOException */
@@ -96,6 +98,7 @@ OPERATIONS
 		skip
 	END;
 	
+/*------------------------------------------------------------------------------*/
 	/* used by the applet to register this applet instance with the JCRE
 	* and to assign the Java Card platform name of the applet as its
 	* instance AID bytes. */
@@ -110,7 +113,7 @@ OPERATIONS
 		skip
 	END;
 
-          
+/*------------------------------------------------------------------------------*/          
 	/* used by the applet to register this applet instance with the JCRE
 	* and to assign the Java Card platform name of the applet as its
 	* instance AID bytes. */
@@ -141,7 +144,7 @@ OPERATIONS
 		skip
 	END;
 	
-	
+/*------------------------------------------------------------------------------*/	
 	/* Called by the JCRE to inform this applet that it has been selected  	
 	when no applet from the same package is active on any other logical 
 	channel. */
@@ -152,7 +155,8 @@ OPERATIONS
 		    res := FALSE    /* tells the JCRE that this Applet declines 	
 		    				to be selected.*/
 		END;
-	
+
+/*------------------------------------------------------------------------------*/		
 	/* used by the applet process() method to distinguish the SELECT APDU
 	command which selected this applet, from all other SELECT APDU 	
 	commands which may relate to ?le or internal applet state selection. */
