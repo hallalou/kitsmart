@@ -61,7 +61,7 @@ OPERATIONS
 		ValidatedFlag := FALSE
 	END;
 			
-	    
+/*-------------------------------------------------------------------------------*/	    
    /* Implements check from the PIN interface */	    
    /* Compares pin against the PIN value. If they match and the PIN is not
     * blocked, sets the validated flag and resets the try counter to its
@@ -96,7 +96,8 @@ OPERATIONS
 			result := FALSE /* otherwise */
 		END
 	END;
-	
+
+/*-------------------------------------------------------------------------------*/	
 	/* Returns the number of times remaining that an incorrect PIN can be
 	 * presented before the PIN is blocked. */
 	tries <-- getTriesRemaining_2 = 
@@ -110,6 +111,7 @@ OPERATIONS
 		result := ValidatedFlag
 	END;
 
+/*-------------------------------------------------------------------------------*/
 	/* Returns true if a valid PIN value has been presented since the last
 	 * card reset or last call to reset(). */
 	result <-- isValidated_2 = 
@@ -119,6 +121,7 @@ OPERATIONS
 			result := FALSE
 		END;
 
+/*-------------------------------------------------------------------------------*/
 	/* If the validated flag is set, resets the validated flag
 	* and resets the PIN try counter to the value of the PIN try limit. If
 	* the validated flag is not set, this method does nothing. */
@@ -131,6 +134,7 @@ OPERATIONS
 		skip
 	END;
 
+/*-------------------------------------------------------------------------------*/
 	/* This method resets the validated ?ag and resets the PIN try counter
 	* to the value of the PIN try limit. 
 	* This method is used by the owner to re-enable the blocked PIN. */
@@ -142,7 +146,7 @@ OPERATIONS
 		skip
 	END;
 	
-	
+/*-------------------------------------------------------------------------------*/	
 	/* This protected method sets the value of the validated ?ag. */
 	setValidatedFlag(value) = 
 	PRE
@@ -151,7 +155,7 @@ OPERATIONS
 		ValidatedFlag := value
 	END;
 
-
+/*-------------------------------------------------------------------------------*/
 	/* This method sets a new value for the PIN and resets the PIN try 	 
 	* counter to the value of the PIN try limit. It also resets the 	
 	* validated ?ag. */

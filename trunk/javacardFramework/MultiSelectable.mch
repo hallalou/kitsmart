@@ -30,7 +30,8 @@ OPERATIONS
 			result := FALSE
 		END
 	END;
-	
+
+/*-------------------------------------------------------------------------------*/
 	/* called by the JCRE to inform that this currently selected applet
 	instance is being deselected on this logical channel while the same
 	applet instance or another applet instance from the same package is

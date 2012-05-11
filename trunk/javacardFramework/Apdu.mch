@@ -46,14 +46,17 @@ OPERATIONS
 		BEGIN
 	    	result :: BUFFER
 	 	END;
-	 	
-	/* Returns the logical channel number associated with the current 			APDU command based on the CLA byte. */ 	
+
+/*-------------------------------------------------------------------------------*/
+	/* Returns the logical channel number associated with the current 
+	APDU command based on the CLA byte. */ 	
 	CLA <-- getCLAChannel = 
 	/* throws: SecurityException*/
 		BEGIN
 		CLA :: cast_byte(0) .. cast_byte(19)
 		END;
-		
+
+/*-------------------------------------------------------------------------------*/		
 	/* Provides the reference to APDU object being processed. */	
 	apdu <-- getCurrentAPDU = 
 	/* throws: SecurityException*/
@@ -67,6 +70,7 @@ OPERATIONS
 	installation or deletion. */
 	END;
 	
+/*-------------------------------------------------------------------------------*/
 	/* Returns the APDU buffer of the APDU object being processed */
 	apdu <-- getCurrentAPDUBuffer = 
 	/* throws: SecurityException*/
@@ -79,20 +83,21 @@ OPERATIONS
 	or the method is called during applet installation or deletion*/
 	END;
 	
-	
+/*-------------------------------------------------------------------------------*/	
 	/* Returns the current processing state of the APDU */
    	result <-- getCurrentState = 
 	BEGIN
 	    result :: APDU_STATE
 	END;
-	
+
+/*-------------------------------------------------------------------------------*/	
 	/* Returns the configured incoming block size. */
 	blocksize <-- getInBlockSize = 
 	BEGIN
 	    blocksize : (blocksize : JSHORT & blocksize >=0 )  
 	END;
 	
-		
+/*-------------------------------------------------------------------------------*/		
 	/* Returns the incoming data length(Lc).*/		
 	length <-- getIncomingLength = 
 	/* throws: APDUException */
@@ -105,14 +110,16 @@ OPERATIONS
 	/* APDUException.ILLEGAL_USE if setIncomingAndReceive() not called 
 	 or if setOutgoing() or setOutgoingNoChaining() previously invoked */
 	END;
-	
+
+/*-------------------------------------------------------------------------------*/	
 	/* Returns the Node Address byte (NAD) in T=1 protocol, and 0 in T=0
 	protocol.  */
 	NAD <-- getNAD = 
 		BEGIN
 			NAD :: JBYTE 
 		END;
-		
+
+/*-------------------------------------------------------------------------------*/		
 	/* Returns the offset within the APDU buffer for incoming command data*/
 	cdata <-- getOffsetCdata = 
 	/*throws: APDUException*/
@@ -122,15 +129,18 @@ OPERATIONS
 		OR
 			cdata := cast_byte(7) /*when Lc is 3 bytes*/
 		END
-	/* APDUException.ILLEGAL_USE if setIncomingAndReceive() not called or if 	setOutgoing() or setOutgoingNoChaining() previously invoked*/
+	/* APDUException.ILLEGAL_USE if setIncomingAndReceive() not called or if 
+	setOutgoing() or setOutgoingNoChaining() previously invoked*/
 	END;
-		
+
+/*-------------------------------------------------------------------------------*/	
 	/* Returns the con?gured outgoing block size. */
 	blocksize <-- getOutBlockSize = 
 	BEGIN
 	    blocksize : (blocksize : JSHORT & blocksize >=0 )  
 	END;
-		
+
+/*-------------------------------------------------------------------------------*/	
 	/*Returns the ISO 7816 transport protocol type, T=1 or T=0 in the low
 		nibble and the transport media in the upper nibble in use. */
 	protocol <-- getProtocol = 
@@ -140,6 +150,7 @@ OPERATIONS
 			protocol := PROTOCOL_T1 
 		END;
 
+/*-------------------------------------------------------------------------------*/
 	/* Returns whether the current APDU command is the ?rst or part of a
 	command chain. */
 	result <-- isCommandChainingCLA = 
@@ -150,7 +161,7 @@ OPERATIONS
 		    result := FALSE
 		END;
 	
-	
+/*-------------------------------------------------------------------------------*/	
 	/* Returns whether the current APDU command CLA byte corresponds to an
 	interindustry command as de?ned in ISO 7816-4:2005 speci?cation. */	
 	result <-- isISOInterindustryCLA = 
@@ -159,30 +170,33 @@ OPERATIONS
 		OR
 			result := FALSE
 		END;
-		
-	/* Returns true if the encoding of the current APDU command based on the 	CLA byte indicates secure messaging. */
+
+/*-------------------------------------------------------------------------------*/		
+	/* Returns true if the encoding of the current APDU command based on the 
+	CLA byte indicates secure messaging. */
 	result <-- isSecureMessagingCLA = 
 		CHOICE
 			result := TRUE /* secure */
 		OR
 			result := FALSE
 		END;
-		
+
+/*-------------------------------------------------------------------------------*/		
 	/* Gets as many data bytes as will ?t without APDU buffer over?ow, at
 	the speci?ed offset bOff. Gets all the remaining bytes if they ?t. */		
 	result <-- receiveBytes(bOff) = 
 	/* throws: APDUException */
 	PRE
-	    	/* space in the buffer must allow for incoming block size. 
-	    	(modeled for size 0, only) */	    
-      	bOff : JSHORT &
+	    /* space in the buffer must allow for incoming block size. 
+	    (modeled for size 0, only) */	    
+      	/* bOff - the offset into APDU buffer */
+		bOff : JSHORT &
       	bOff >= 0 & 
       	bOff < BUFFER_LENGTH 
       	
       	/*APDUException if setIncomingAndReceive() not called or 
       	if setOutgoing() or setOutgoingNoChaining() previously invoked*/      
-      	
-		/*APDUException if not enough buffer space for incoming block size*/
+ 		/*APDUException if not enough buffer space for incoming block size*/
 		/*APDUException on I/O error.*/
 		/*APDUException if T=1 protocol is in use and the CAD sends 
 		in an ABORT S-Block command to abort the data transfer*/
@@ -191,19 +205,20 @@ OPERATIONS
     	    STATE_FULL_INCOMING and 
     	    returns the number of bytes read */
         
-		result : (result : JSHORT & 
+			result : (result : JSHORT & 
             	  result >=0 &
             	  result <=BUFFER_LENGTH)        	
    	END; 
-		
+
+/*-------------------------------------------------------------------------------*/
 	sendBytes(bOff, len) = 
 	/* throws: APDUException */
 	PRE
-	    		/* the offset into APDU buffer */
+	    	/* bOff - the offset into APDU buffer */
        		bOff : JSHORT &
        		bOff >= 0 & /*APDUException  if 'bOff' is negative*/
        		
-       		/*  the length of the data in bytes to send */
+       		/* len - the length of the data in bytes to send */
        		len : JSHORT &
        		len >= 0 & /*APDUException  if 'len' is negative */
        		
@@ -237,18 +252,19 @@ OPERATIONS
     	    updates the number of bytes to be sent */
     	    skip
    	END;
-    
+
+/*-------------------------------------------------------------------------------*/    
     sendBytesLong(outData ,bOff ,len) = 
     /* throws: APDUException, SecurityException */
     PRE
-        	/* the source data byte array */
+        /* outData - the source data byte array */
    		outData : seq(JBYTE) & 
    		
-   		/* the offset into outData array */
+   		/* bOff - the offset into outData array */
    		bOff : JSHORT & 
    		bOff >= 0 &
    		
-   		/* the byte length of the data to send */
+   		/* len - the byte length of the data to send */
    	      len : JSHORT &
    	      len >= 0 
    	      
@@ -280,57 +296,58 @@ OPERATIONS
     	    skip
     	END;
     		
-    		
+/*-------------------------------------------------------------------------------*/    		
       result <-- setIncomingAndReceive = 
     	/* throws: APDUException */
     	
 		/*APDUException if setIncomingAndReceive() already invoked 
 		or if setOutgoing() or setOutgoingNoChaining() previously invoked*/
-    		/* APDUException on I/O error*/
-    		/* APDUException if T=1 protocol is in use and the CAD 
-    		sends in an ABORT S-Block command to abort the data transfer*/
+    	/* APDUException on I/O error*/
+    	/* APDUException if T=1 protocol is in use and the CAD 
+    	sends in an ABORT S-Block command to abort the data transfer*/
 	BEGIN
   	
   	/* updates the APDU state to STATE_PARTIAL_INCOMING or 	
   	STATE_FULL_INCOMING  and returns  the number of bytes read */
 			
 		result :(result : JSHORT & result >= 0 &
-				     				result <= BUFFER_LENGTH )		    
+		result <= BUFFER_LENGTH )		    
 	END;
 	
-	
-	
+/*-------------------------------------------------------------------------------*/	
 	result <-- setOutgoing = 
 	/* throws: APDUException */
 
 		/* The APDU state must be one of STATE_INITIAL or 
-		  STATE_PARTIAL_INCOMING or STATE_FULL_INCOMING */
-		  /* APDUException if this method, or setOutgoingNoChaining() 
-		  method already invoked */
-		  /* APDUException I/O error */
+		STATE_PARTIAL_INCOMING or STATE_FULL_INCOMING */
+		/* APDUException if this method, or setOutgoingNoChaining() 
+		method already invoked */
+		/* APDUException I/O error */
 	BEGIN
 	    /* updates the APDU state to STATE_OUTGOING and 
-	    	returns Le, the expected length of response */
-	    
-		result : (result : JSHORT & result >= 0) 
+	    returns Le, the expected length of response */
+	    result : (result : JSHORT & result >= 0) 
    	END;
 	
+/*-------------------------------------------------------------------------------*/	
+	/* combination of setOutgoing(), setOutgoingLength(len) followed by 
+	sendBytes(bOff,len). Once this method is invoked,sendBytes() and 
+	sendBytesLong() methods cannot be invoked and the APDU buffer must not be 
+	altered. Sends len byte response from the APDU buffer starting at the 
+	speci?ed offset bOff. */
 	
-	/* combination of setOutgoing(), setOutgoingLength(len) followed by sendBytes(bOff,len). Once this method is invoked,sendBytes() and sendBytesLong() methods cannot be invoked and the APDU buffer must not be altered. 
-Sends len byte response from the APDU buffer starting at the speci?ed offset bOff. */
 	setOutgoingAndSend(bOff ,len) =  
 	/* throws: APDUException */
 	PRE
-	      /* the offset into APDU buffer - APDUException if negative */
+	    /* bOff - the offset into APDU buffer - APDUException if negative */
 		bOff : JSHORT &
 		bOff >= 0 &
-		/* bytelength of the data to send - APDUException if negative */
+		/* len - bytelength of the data to send - APDUException if negative */
 		len : JSHORT & 	
 		len >= 0 & 
 		
-		/*APDUException if 'len' is greater than 256 and 
-		the currently selected applet does not implement 
-		the javacardx.apdu.ExtendedLength interface*/ 
+		/*APDUException if 'len' is greater than 256 and the currently selected 
+		applet does not implement the javacardx.apdu.ExtendedLength interface*/ 
 		len <= 256  
 		
 		/* The APDU state must be one of STATE_INITIAL or 
@@ -342,7 +359,8 @@ Sends len byte response from the APDU buffer starting at the speci?ed offset bOf
 	    	returns Le, the expected length of response */
    	      skip	
    	END;
-	
+
+/*-------------------------------------------------------------------------------*/	
 	setOutgoingLength(len) = 
 	/* throws: APDUException */
     	PRE
@@ -364,24 +382,20 @@ Sends len byte response from the APDU buffer starting at the speci?ed offset bOf
  		skip	   
    	END;
 
-
-
+/*-------------------------------------------------------------------------------*/
  	result <-- setOutgoingNoChaining = 
     	
-    		/* The APDU state must be one of STATE_INITIAL or 
-		  STATE_PARTIAL_INCOMING or STATE_FULL_INCOMING */
-		  /* APDUException if this method, or setOutgoing() method 
-		  already invoked*/
-    		/* APDUException I/O error */
+    	/* The APDU state must be one of STATE_INITIAL or 
+		 STATE_PARTIAL_INCOMING or STATE_FULL_INCOMING */
+		/* APDUException if this method, or setOutgoing() method already invoked*/
+    	/* APDUException I/O error */
 	BEGIN
  	    /* updates the APDU state to STATE_OUTGOING and 
 	    	returns Le, the expected length of response */
 		result : (result : JSHORT & result >= 0) 
    	END;
 
-   
-
-
+/*-------------------------------------------------------------------------------*/
 	waitExtension = 
 	/* throws: APDUException */
 	
@@ -391,7 +405,6 @@ Sends len byte response from the APDU buffer starting at the speci?ed offset bOf
 	BEGIN
 		skip
 	END
-
 
 
 END
