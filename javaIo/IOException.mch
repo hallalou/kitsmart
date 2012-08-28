@@ -4,10 +4,6 @@
  */
 MACHINE
     IOException
-
-/*This class extends java.lang.Exception*/
-EXTENDS
-    Exception
     
 SEES 
     javaIOClasses

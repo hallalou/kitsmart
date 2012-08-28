@@ -11,7 +11,8 @@ SEES
 	javacardxCryptoClasses,
 	javacardSecurityClasses,
 	JByte,
-	JShort
+	JShort,
+	JBoolean
 
 /*This class extends java.lang.Object */
 EXTENDS
@@ -107,7 +108,7 @@ OPERATIONS
 		
 		/* externalAccess - true indicates that the instance will be shared among 
 		multiple applet instances */
-		externalAccess : BOOL
+		externalAccess : JBOOLEAN
 		
 		/* CryptoException.NO_SUCH_ALGORITHM if the requested algorithm is not 
 		supported or shared access mode is not supported. */

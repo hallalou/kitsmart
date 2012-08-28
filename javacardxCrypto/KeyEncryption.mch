@@ -9,8 +9,7 @@ MACHINE
     KeyEncryption
 
 SEES
-	javacardxCryptoClasses,
-	JShort
+	javacardxCryptoClasses
 
 OPERATIONS
 	setKeyCipher(keyCipher) =
