@@ -2,7 +2,9 @@
  * Author: simone
  * Creation date: 07/06/11
  *
- * Extraído em parte de LibsBSmart
+ * The JCSystem class includes a collection of methods to control applet execution, 
+ * resource management, atomic transaction management, object deletion mechanism and 
+ * inter-applet object sharing in the Java Card environment.
  */
 MACHINE
     JCSystem
@@ -12,11 +14,11 @@ EXTENDS
 	Object
     
 SEES
+	javacardFrameworkClasses,
+	javaLangClasses,
 	JShort,
 	JByte,
-	JBoolean,
-	Shareable,
-	Classes
+	JBoolean
 
 CONSTANTS
 	MEMORY_TYPE_PERSISTENT,
@@ -34,7 +36,7 @@ CONSTANTS
 
 PROPERTIES
     
-      MEMORY_TYPE_PERSISTENT : JBYTE &
+    MEMORY_TYPE_PERSISTENT : JBYTE &
 	MEMORY_TYPE_PERSISTENT = 0 &
 	
 	MEMORY_TYPE_TRANSIENT_RESET : JBYTE &
@@ -55,12 +57,13 @@ PROPERTIES
 	MAKEARRAYBOOL : seq(JBOOLEAN) &
 	MAKEARRAYBYTE : seq(JBYTE) &
 	MAKEARRAYSHORT : seq(JSHORT) &
-	MAKEARRAYOBJECT : seq(/*OBJECT*/JSHORT)
+	MAKEARRAYOBJECT : seq(OBJECT)
 
 OPERATIONS
     
     /* Aborts the atomic transaction. 
     The contents of the commit buffer are discarded. */
+	
 	abortTransaction = 
 	/* throws: TransactionException */
 	/* TransactionException.NOT_IN_PROGRESS if a transaction is not in progress.*/
@@ -70,6 +73,7 @@ OPERATIONS
 
 /*-------------------------------------------------------------------------------*/
 	/* Begins an atomic transaction. */
+	
 	beginTransaction = 
 	/* throws: TransactionException */
 	/* TransactionException.IN_PROGRESS if a transaction is already in progress*/
@@ -78,8 +82,8 @@ OPERATIONS
 	END;
 
 /*-------------------------------------------------------------------------------*/	
-	/* Commits an atomic transaction. 
-	   The contents of commit buffer are atomically committed. */
+	/* Commits an atomic transaction. The contents of commit buffer are atomically committed. */
+	
 	commitTransaction = 
 	/* throws: TransactionException */
 	/* TransactionException.NOT_IN_PROGRESS if a transaction is not in progress */
@@ -91,6 +95,7 @@ OPERATIONS
 	/* Returns the JCRE-owned instance of the AID object associated with 
 	   the current applet context, or null if the Applet.register() method 
 	   has not yet been invoked. */
+	
 	aid <-- getAID =
 	BEGIN
 		aid :: AID
@@ -99,15 +104,17 @@ OPERATIONS
 /*-------------------------------------------------------------------------------*/	
 	/* Called by a client applet to get a server applet?s shareable 
 	   interface object. */
+	
 	result <-- getAppletShareableInterfaceObject(serverAID, parameter) = 
 	/* throws: SecurityException */ 
 	PRE
-		/*  the AID of the server applet */
+		/* serverAID - the AID of the server applet */
 		serverAID : AID &
-		/* optional parameter data */
+		/* parameter - optional parameter data */
 		parameter : JBYTE
 
-		/* SecurityException - if the server applet is not multiselectable 			and is currently active on another logical channel */
+		/* SecurityException - if the server applet is not multiselectable
+		and is currently active on another logical channel */
 	THEN
 		result :: SHAREABLE
 	END;
@@ -115,6 +122,7 @@ OPERATIONS
 /*-------------------------------------------------------------------------------*/	
 	/* called to obtain the logical channel number assigned to the 
 	   currently selected applet instance. */
+	
 	channel <-- getAssignedChannel = 
 	BEGIN
 		channel : ((channel : JBYTE) & (channel : 0 .. 19))
@@ -123,10 +131,11 @@ OPERATIONS
 /*-------------------------------------------------------------------------------*/
 	/* Obtains the amount of memory of the speci?ed type that is 
 	   available to the applet. */
+	
 	memory <-- getAvailableMemory(memoryType) = 
 	/* throws: SystemException */	
 	PRE
-	    /* the type of memory being queried */
+	    /* memoryType - the type of memory being queried */
 	    /* SystemException.ILLEGAL_VALUE if memoryType is not a valid 	
 	       memory type. */
 		memoryType : JBYTE &
@@ -139,6 +148,7 @@ OPERATIONS
 
 /*-------------------------------------------------------------------------------*/
 	/* Returns the total number of bytes in the commit buffer. */
+	
 	numBytes <-- getMaxCommitCapacity = 
 	BEGIN
 	    numBytes : ((numBytes : JSHORT) & 
@@ -146,8 +156,11 @@ OPERATIONS
 	END;
 	
 /*-------------------------------------------------------------------------------*/	
-    result <-- isTransient(theObj) = 
+    /* Checks if the specified object is transient. */
+	
+	result <-- isTransient(theObj) = 
 	PRE
+		/* theObj - the object being queried */
 		theObj : OBJECT
 	THEN
 		CHOICE
@@ -160,6 +173,8 @@ OPERATIONS
 	END;
 
 /*-------------------------------------------------------------------------------*/
+	/* Creates a transient boolean array with the specified array length. */
+	
 	arrayBool <-- makeTransienteBooleanArray(length, event) = 
 	/* throws: NegativeArraySizeException,
 		SystemException */
@@ -189,6 +204,8 @@ OPERATIONS
 	END;
 
 /*-------------------------------------------------------------------------------*/
+	/* Creates a transient byte array with the specified array length. */
+	
 	arrayByte <-- makeTransientByteArray(length, event) = 
 	/* throws: NegativeArraySizeException,
 		SystemException */
@@ -218,6 +235,8 @@ OPERATIONS
 	END;
 
 /*-------------------------------------------------------------------------------*/
+	/* Creates a transient short array with the specified array length. */
+	
 	arrayShort <-- makeTransientShortArray(length, event) = 
 	/* throws: NegativeArraySizeException,
 		SystemException */
@@ -247,6 +266,8 @@ OPERATIONS
 	END;
 
 /*-------------------------------------------------------------------------------*/
+	/* Creates a transient array of Object with the specified array length. */
+	
 	arrayObject <-- makeTransientObjectArray(length, event) = 
 	/* throws: NegativeArraySizeException,
 		SystemException */
@@ -276,13 +297,17 @@ OPERATIONS
 	END;
 
 /*-------------------------------------------------------------------------------*/
+	/* Returns the current major and minor version of the Java Card API. */
+	
 	version <-- getVersion =
 	BEGIN
 		version :: JSHORT	
 	END;
 
 /*-------------------------------------------------------------------------------*/		
-	AID <-- lookupAID(buffer, offset, length) = 
+	/* Returns the Java Card runtime environment-owned instance of the AID object */
+	
+	aid <-- lookupAID(buffer, offset, length) = 
 	PRE
 		/* buffer - byte array containing the AID bytes */
 		/*A VM exception is thrown if 'buffer' is null, 
@@ -299,14 +324,16 @@ OPERATIONS
 	THEN
 		CHOICE
 			/*Assigns a byte array to the variable AID*/
-			AID := MAKEARRAYBYTE
+			aid := MAKEARRAYBYTE
 		OR
 			/*Assigns a empty sequence to the variable AID*/
-			AID := []
+			aid := []
 		END
 	END;
 
 /*-------------------------------------------------------------------------------*/
+	/* Returns the current transaction nesting depth level */
+	
 	result <-- getTransactionDepth = 
 		CHOICE
 			result := 1
@@ -315,6 +342,8 @@ OPERATIONS
 		END;
 
 /*-------------------------------------------------------------------------------*/		
+	/* Returns the number of bytes left in the commit buffer. */
+	
 	numBytes <-- getUnusedCommitCapacity = 
 		ANY jcsystem_numBytes
 		WHERE (jcsystem_numBytes : JSHORT) &
@@ -323,16 +352,22 @@ OPERATIONS
 		END;
 
 /*-------------------------------------------------------------------------------*/
-	AID <-- getPreviousContextAID = 
+	/* Obtains the Java Card runtime environment-owned instance of the AID object 
+		associated with the previously active applet context. */
+	
+	aid <-- getPreviousContextAID = 
 		CHOICE
 			/*Assigns a byte array to the variable AID*/
-			AID := MAKEARRAYBYTE
+			aid := MAKEARRAYBYTE
 		OR
 			/*Assigns a empty sequence to the variable AID*/
-			AID := []
+			aid := []
 		END;
 
 /*-------------------------------------------------------------------------------*/
+	/* This method is used to determine if the implementation for the Java Card 
+		platform supports the object deletion mechanism. */
+	
 	result <-- isObjectDeletionSupported = 
 		CHOICE
 			result := TRUE
@@ -341,12 +376,17 @@ OPERATIONS
 		END;
 
 /*-------------------------------------------------------------------------------*/		
+	/* This method is invoked by the applet to trigger the object deletion service 
+		of the Java Card runtime environment. */
+	
 	requestObjectDeletion = 
 	/* throws: SystemException*/
 	/*SystemException.ILLEGAL_USE if the object deletion mechanism is not implemented*/
 		skip;
 
 /*-------------------------------------------------------------------------------*/
+	/* This method is used to determine if the specified applet is active on the card. */
+	
 	result <-- isAppletActive(theApplet) = 
 	PRE
 		theApplet : seq(AID)
